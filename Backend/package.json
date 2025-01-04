@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "tsc && node dist/index.js",
+    "start": "node dist/index.js"
   },
   "keywords": [],
-  "type": "module",
   "author": "",
   "license": "ISC",
   "description": "",
@@ -16,5 +15,13 @@
     "@types/node": "^22.10.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.3"
   }
 }
