@@ -4,6 +4,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import MongoConnect from "./MongoConnect";
+import authRouter from "./Routes/authRoutes";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -15,9 +16,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.json("Hello world");
-});
+app.use("/", authRouter);
 
 app.listen(PORT, () => {
   MongoConnect();
