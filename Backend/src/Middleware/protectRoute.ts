@@ -5,25 +5,33 @@ export const protectRoute = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const token = await req.cookies["user"];
 
     if (!token) {
-      return res.status(401).json("Unauthorized!");
+      res.status(401).json("Unauthorized!");
+      return;
     }
 
     const userID: string | null = verifyToken(token);
 
     if (!userID) {
-      return res.status(401).json({
+      res.status(401).json({
         error: "Unauthorized",
       });
+      return;
     }
+
     req.user = userID;
+
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized!" });
+    }
+
     next();
   } catch (err) {
-    console.log("Error in  protextRoute middleware : ", err);
-    return res.status(500).json("Internal server error!");
+    console.log("Error in  protectRoute middleware : ", err);
+    res.status(500).json("Internal server error!");
   }
 };
