@@ -11,3 +11,9 @@ export interface createAccountInterface {
   email: string;
   password: string;
 }
+
+export interface createClassInterface {
+  name: string;
+  description?: string;
+  teacherName: string;
+}
