@@ -22,6 +22,6 @@ router.patch("/editclass", protectRoute, editClass);
 router.get("/getclass", protectRoute, getClass);
 router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removeadmin", protectRoute, removeAdmin);
-router.patch("removemember", protectRoute, removeMember);
+router.patch("/removemember", protectRoute, removeMember);
 
 export default router;

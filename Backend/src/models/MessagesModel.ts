@@ -11,66 +11,40 @@ const messagesSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    attachedImage: {
-      type: String,
-      required: false,
+    classID: {
+      type: mongoose.Schema.Types.ObjectId,
+      res: "Classes",
+      required: true,
     },
+
+    attachedImages: [
+      {
+        type: String,
+        required: false,
+        default: [],
+      },
+    ],
     attachedVideo: {
       type: String,
       required: false,
     },
-    attachedPdf: {
-      type: String,
-      required: false,
-    },
+    attachedPdfs: [
+      {
+        type: String,
+        required: false,
+        default: [],
+      },
+    ],
     isPinned: {
       type: Boolean,
       default: false,
     },
-    Comments: [
-      {
-        commenter: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-        commentContent: {
-          type: String,
-          required: true,
-        },
-        replies: [
-          {
-            replierId: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "User",
-              required: true,
-            },
-            replyContent: {
-              type: String,
-              required: true,
-            },
-            RepliedAt: {
-              type: Date,
-              default: Date.now,
-            },
-          },
-        ],
-        likes: [
-          {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: false,
-            default: [],
-          },
-        ],
-        commentedAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
   },
   {
     timestamps: true,
   }
 );
+
+const Messages = mongoose.model("Messages", messagesSchema);
+
+export default Messages;

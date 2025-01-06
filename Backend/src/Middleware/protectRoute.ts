@@ -16,8 +16,6 @@ export const protectRoute = async (
 
     const userID: string | null = verifyToken(token);
 
-    console.log(typeof userID, "HEllo");
-
     if (!userID || typeof userID !== "string") {
       res.status(401).json({
         error: "Unauthorized",
