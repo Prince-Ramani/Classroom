@@ -1,12 +1,13 @@
 import path from "path";
 
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import MongoConnect from "./MongoConnect";
 import authRouter from "./Routes/authRoutes";
 import classRouter from "./Routes/classesRoute";
 import messageRouter from "./Routes/messagesRoute";
+import commentRouter from "./Routes/commentsRoutes";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -21,6 +22,12 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use("/", authRouter);
 app.use("/class", classRouter);
 app.use("/message", messageRouter);
+app.use("/comment", commentRouter);
+
+app.get("*", (req: Request, res: Response) => {
+  console.log(req.url);
+  res.status(404).json({ error: "No such api found!" });
+});
 
 app.listen(PORT, () => {
   MongoConnect();

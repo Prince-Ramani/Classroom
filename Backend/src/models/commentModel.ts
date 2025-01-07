@@ -1,9 +1,19 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
   commenter: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
+  },
+  messageID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Messages",
+    required: true,
+  },
+  classID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Classes",
     required: true,
   },
   commentContent: {

@@ -404,10 +404,82 @@ export const deleteMessaege = async (
       return;
     }
 
-    await Messages.findOneAndDelete({
+    const messageToDelete = await Messages.findOne({
       _id: messageID,
       classID: classID,
     });
+
+    if (!messageToDelete) {
+      res.status(404).json({ error: "No such message found!" });
+      return;
+    }
+
+    if (messageToDelete.attachedImages.length > 0) {
+      await Promise.all(
+        messageToDelete.attachedImages.map(async (img) => {
+          try {
+            const imgPath = img.split("/").splice(-1)[0].split(".")[0];
+            const imgID = `${ImageFolder}/${imgPath}`;
+            await cloudinary.uploader.destroy(imgID, {
+              resource_type: "image",
+            });
+            return;
+          } catch (err) {
+            console.error(
+              "Error deleting attachedImages in deleteMesssage controller : ",
+              err
+            );
+            res.status(500).json("Internal sever error!");
+            return;
+          }
+        })
+      );
+    }
+
+    if (messageToDelete.attachedVideo) {
+      try {
+        const vidPath = messageToDelete.attachedVideo
+          .split("/")
+          .splice(-1)[0]
+          .split(".")[0];
+        const videoID = `${VideoFolder}/${vidPath}`;
+        await cloudinary.uploader.destroy(videoID, {
+          resource_type: "video",
+        });
+        return;
+      } catch (err) {
+        console.error(
+          "Error deleting attachedVideo in deleteMesssage controller : ",
+          err
+        );
+        res.status(500).json("Internal sever error!");
+        return;
+      }
+    }
+
+    if (messageToDelete.attachedPdfs.length > 0) {
+      await Promise.all(
+        messageToDelete.attachedPdfs.map(async (doc) => {
+          try {
+            const docPath = doc.split("/").splice(-1)[0].split(".")[0];
+            const docID = `${ImageFolder}/${docPath}`;
+            await cloudinary.uploader.destroy(docID, {
+              resource_type: "raw",
+            });
+            return;
+          } catch (err) {
+            console.error(
+              "Error deleting attachedDocs in deleteMesssage controller : ",
+              err
+            );
+            res.status(500).json("Internal sever error!");
+            return;
+          }
+        })
+      );
+    }
+
+    await Messages.findOneAndDelete({ _id: messageID, classID: classID });
 
     res.status(200).json({
       message: `Message deleted successfully!`,
