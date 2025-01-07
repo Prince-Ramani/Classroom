@@ -19,10 +19,10 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-app.use("/", authRouter);
-app.use("/class", classRouter);
-app.use("/message", messageRouter);
-app.use("/comment", commentRouter);
+app.use("/api", authRouter);
+app.use("/api/class", classRouter);
+app.use("/api/message", messageRouter);
+app.use("/api/comment", commentRouter);
 
 app.get("*", (req: Request, res: Response) => {
   console.log(req.url);

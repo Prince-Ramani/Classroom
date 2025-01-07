@@ -5,6 +5,7 @@ import {
   deleteClass,
   editClass,
   getClass,
+  getFullMessage,
   joinClass,
   leaveClass,
   newAdmin,
@@ -19,7 +20,8 @@ router.post("/joinclass", protectRoute, joinClass);
 router.post("/leaveclass", protectRoute, leaveClass);
 router.delete("/deleteclass", protectRoute, deleteClass);
 router.patch("/editclass", protectRoute, editClass);
-router.get("/getclass", protectRoute, getClass);
+router.get("/getclass/:classID", protectRoute, getClass);
+router.get("/getMessage/:classID/:messageID", protectRoute, getFullMessage);
 router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removeadmin", protectRoute, removeAdmin);
 router.patch("/removemember", protectRoute, removeMember);

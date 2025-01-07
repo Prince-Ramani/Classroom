@@ -3,6 +3,8 @@ import User from "../models/UserModel";
 import Classes from "../models/ClassModel";
 import { createClassInterface } from "../types";
 import mongoose, { mongo } from "mongoose";
+import Messages from "../models/MessagesModel";
+import { Comments } from "../models/commentModel";
 
 export const createClass = async (
   req: Request,
@@ -311,7 +313,7 @@ export const editClass = async (req: Request, res: Response): Promise<void> => {
 
 export const getClass = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { classID }: { classID: string | undefined } = req.body;
+    const classID: string | undefined = req.params.classID;
 
     if (!classID || classID.trim() === "" || typeof classID !== "string") {
       res.status(400).json({ error: "Classid required!" });
@@ -319,15 +321,66 @@ export const getClass = async (req: Request, res: Response): Promise<void> => {
     }
 
     const askedClass = await Classes.findOne({ _id: classID }).lean();
-
     if (!askedClass) {
       res.status(404).json({ error: "No such class found!" });
       return;
     }
 
-    res.status(200).json(askedClass);
+    const classMessages = await Messages.find({ classID: classID })
+      .populate("uploadedBy")
+      .lean();
+
+    const classM = await Promise.all(
+      classMessages.map(async (ms) => {
+        const commentLength = await Comments.countDocuments({
+          messageID: ms._id,
+          classID: ms.classID,
+        });
+
+        return { ...ms, commentLength };
+      })
+    );
+
+    res.status(200).json({ ...askedClass, ...classM });
   } catch (err) {
     console.error("Error in getClass controller : ", err);
+    res.status(500).json({ error: "Internal sever error!" });
+  }
+};
+
+export const getFullMessage = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const classID: string | undefined = req.params.classID;
+    const messageID: string | undefined = req.params.messageID;
+
+    if (!classID || classID.trim() === "" || typeof classID !== "string") {
+      res.status(400).json({ error: "Classid required!" });
+      return;
+    }
+
+    const classOfMessage = await Classes.findOne({ _id: classID }).lean();
+    if (!classOfMessage) {
+      res.status(404).json({ error: "No such class found!" });
+      return;
+    }
+
+    const classMessage = await Messages.find({ _id: messageID }).lean();
+
+    if (!classMessage) {
+      res.status(404).json({ error: "No such message found!" });
+      return;
+    }
+
+    const comments = await Comments.findOne({ classID, messageID })
+      .populate("commenter replierId")
+      .lean();
+
+    res.status(200).json({ ...classMessage, ...comments });
+  } catch (err) {
+    console.error("Error in getFullMessage controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
   }
 };
@@ -345,7 +398,7 @@ export const newAdmin = async (req: Request, res: Response): Promise<void> => {
     const userID = req.user as string;
 
     if (!classID || typeof classID !== "string" || classID.trim() === "") {
-      res.status(400).json({ error: "Classid required!" });
+      res.status(400).json({ error: "Class id required!" });
       return;
     }
 

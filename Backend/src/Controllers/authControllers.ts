@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import { Request, RequestHandler, Response } from "express";
 import { createAccountInterface } from "../types";
 import User from "../models/UserModel";
-import { error } from "console";
 import { createToken } from "../JWT";
 
 const validateEmail = (email: string): boolean => {
