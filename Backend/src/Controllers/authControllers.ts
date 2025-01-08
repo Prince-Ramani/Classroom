@@ -171,7 +171,7 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
   try {
     const userID = req.user as string;
 
-    const user = await User.findOne({ _id: userID }).lean();
+    const user = await User.findOne({ _id: userID }).select("-password").lean();
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized!" });

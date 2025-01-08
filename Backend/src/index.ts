@@ -2,6 +2,7 @@ import path from "path";
 
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import MongoConnect from "./MongoConnect";
 import authRouter from "./Routes/authRoutes";
@@ -14,6 +15,14 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 const PORT = process.env.PORT || 8000;
 
 const app = express();
+
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));

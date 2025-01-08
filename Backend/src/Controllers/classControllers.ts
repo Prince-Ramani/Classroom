@@ -56,6 +56,7 @@ export const createClass = async (
         description,
         teacherName,
         admins: [req.user],
+        banner: process.env.defaultClassBanner || "",
       });
 
       await newClass.save();
@@ -68,6 +69,7 @@ export const createClass = async (
       name,
       teacherName,
       admins: [req.user],
+      banner: process.env.defaultClassBanner || "",
     });
 
     await newClass.save();
@@ -308,6 +310,38 @@ export const editClass = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     console.error("Error in editClass controller : ", err);
     res.status(500).json({ error: "Internal server error!" });
+  }
+};
+
+export const getClasses = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userID = req.user;
+
+    if (!userID) {
+      res.status(403).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const user = await User.findOne({ _id: userID });
+
+    if (!user) {
+      res.status(404).json({ error: "No such user found!" });
+      return;
+    }
+
+    const TotalClasses = await Classes.find({
+      _id: { $in: user.classesJoined },
+    })
+      .select("_id name teacherName description banner")
+      .lean();
+
+    res.status(200).json(TotalClasses);
+  } catch (err) {
+    console.error("Error in getClass controller : ", err);
+    res.status(500).json({ error: "Internal sever error!" });
   }
 };
 
