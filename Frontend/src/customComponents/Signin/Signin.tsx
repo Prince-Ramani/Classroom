@@ -58,7 +58,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-100   border flex justify-center items-center  ">
+    <div className="min-h-screen w-full    border flex justify-center items-center  ">
       <div className="flex flex-col  p-2 gap-2 lg:gap-7 w-full max-w-xs md:max-w-sm lg:max-w-lg ">
         <div>
           <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
@@ -87,7 +87,7 @@ const Signin = () => {
                 className="focus:outline-none w-full text-black"
                 type="password"
                 id="password"
-                placeholder="password"
+                placeholder="Password"
                 onChange={(e) =>
                   setInfo((prev) => ({ ...prev, password: e.target.value }))
                 }
