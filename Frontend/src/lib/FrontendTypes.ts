@@ -14,4 +14,23 @@ export interface ClassInterface {
   banner: string;
   description?: string;
   teacherName: string;
+  members: number | string[];
+  admins: number | string[];
+}
+
+export interface shortMessageInetrface {
+  attchedImage: string[];
+  attachedVideo: string;
+  attchedPdfs: string[];
+  commentLength: number;
+  content: string;
+  createdAt: string;
+  isPinned: boolean;
+
+  uploadedBy: {
+    _id: string;
+    profilePicture: string;
+    username: string;
+  };
+  _id: string;
 }

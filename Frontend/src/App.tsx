@@ -11,6 +11,10 @@ import { useAuthUser } from "./Context/authUserContext";
 import CreateClass from "./customComponents/CreateClass/CreateClass";
 import { useState } from "react";
 import Home from "./customComponents/Home/Home";
+import ClassLayout from "./customComponents/Class/Layout.tsx/ClassLayout";
+import Stream from "./customComponents/Class/Stream";
+import Classwork from "./customComponents/Class/Classwork";
+import People from "./customComponents/Class/People";
 
 const App = () => {
   const { setAuthUser } = useAuthUser();
@@ -25,10 +29,11 @@ const App = () => {
       if ("_id" in data) {
         setAuthUser(data);
         setIsLoggedIn(true);
-      }
+      } else setIsLoggedIn(false);
 
       return data;
     },
+    retry: false,
   });
 
   if (isPending) {
@@ -54,6 +59,20 @@ const App = () => {
           path="/createclass"
           element={isLoggedIn ? <CreateClass /> : <Navigate to="/signup" />}
         />
+        <Route path="/class/:classID" element={<ClassLayout />}>
+          <Route
+            index
+            element={isLoggedIn ? <Stream /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="classwork"
+            element={isLoggedIn ? <Classwork /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="people"
+            element={isLoggedIn ? <People /> : <Navigate to="/signup" />}
+          />
+        </Route>
         <Route
           path="*"
           element={isLoggedIn ? <Home /> : <Navigate to="/signup" />}

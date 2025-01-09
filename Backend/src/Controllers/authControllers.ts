@@ -98,7 +98,7 @@ export const createAccount: RequestHandler = async (
     const token = createToken(user._id.toString());
 
     res.cookie("user", token, {
-      maxAge: 1000 * 60 * 60,
+      maxAge: 1000 * 60 * 180,
     });
 
     res.status(201).json({ message: "Account created successfully!" });

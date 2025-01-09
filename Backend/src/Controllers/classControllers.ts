@@ -136,11 +136,7 @@ export const leaveClass = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      classID,
-    }: {
-      classID: string | undefined;
-    } = req.body;
+    const classID: string | undefined = req.params.classID;
 
     const userID = req.user as string;
 
@@ -335,10 +331,16 @@ export const getClasses = async (
     const TotalClasses = await Classes.find({
       _id: { $in: user.classesJoined },
     })
-      .select("_id name teacherName description banner")
+      .select("_id name teacherName description banner members admins")
       .lean();
 
-    res.status(200).json(TotalClasses);
+    const filteredClasses = TotalClasses.map((cl) => ({
+      ...cl,
+      members: cl.members.length,
+      admins: cl.admins.length,
+    }));
+
+    res.status(200).json(filteredClasses);
   } catch (err) {
     console.error("Error in getClass controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
@@ -350,18 +352,42 @@ export const getClass = async (req: Request, res: Response): Promise<void> => {
     const classID: string | undefined = req.params.classID;
 
     if (!classID || classID.trim() === "" || typeof classID !== "string") {
-      res.status(400).json({ error: "Classid required!" });
+      res.status(400).json({ error: "Class id required!" });
       return;
     }
 
-    const askedClass = await Classes.findOne({ _id: classID }).lean();
+    const askedClass = await Classes.findOne({ _id: classID })
+      .select("banner _id createdAt description name teacherName admins")
+      .lean();
     if (!askedClass) {
       res.status(404).json({ error: "No such class found!" });
       return;
     }
 
+    res.status(200).json(askedClass);
+  } catch (err) {
+    console.error("Error in getClass controller : ", err);
+    res.status(500).json({ error: "Internal sever error!" });
+  }
+};
+
+export const getMessages = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const classID: string | undefined = req.params.classID;
+
+    if (!classID || classID.trim() === "" || typeof classID !== "string") {
+      res.status(400).json({ error: "Class id required!" });
+      return;
+    }
+
     const classMessages = await Messages.find({ classID: classID })
-      .populate("uploadedBy")
+      .populate({
+        path: "uploadedBy",
+        select: "_id profilePicture username",
+      })
       .lean();
 
     const classM = await Promise.all(
@@ -375,10 +401,10 @@ export const getClass = async (req: Request, res: Response): Promise<void> => {
       })
     );
 
-    res.status(200).json({ ...askedClass, ...classM });
+    res.status(200).json(classM);
   } catch (err) {
-    console.error("Error in getClass controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
+    console.log("Error in getMessages controller : ", err);
   }
 };
 

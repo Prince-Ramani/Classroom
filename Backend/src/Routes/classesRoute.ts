@@ -7,6 +7,7 @@ import {
   getClass,
   getClasses,
   getFullMessage,
+  getMessages,
   joinClass,
   leaveClass,
   newAdmin,
@@ -18,12 +19,13 @@ const router = express.Router();
 
 router.post("/createclass", protectRoute, createClass);
 router.post("/joinclass", protectRoute, joinClass);
-router.post("/leaveclass", protectRoute, leaveClass);
+router.post("/leaveclass/:classID", protectRoute, leaveClass);
 router.delete("/deleteclass", protectRoute, deleteClass);
 router.patch("/editclass", protectRoute, editClass);
 router.get("/getclasses", protectRoute, getClasses);
 
 router.get("/getclass/:classID", protectRoute, getClass);
+router.get("/getmessages/:classID", protectRoute, getMessages);
 router.get("/getMessage/:classID/:messageID", protectRoute, getFullMessage);
 router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removeadmin", protectRoute, removeAdmin);

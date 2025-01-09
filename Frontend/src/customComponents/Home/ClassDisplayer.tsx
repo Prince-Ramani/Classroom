@@ -1,12 +1,18 @@
 import { ClassInterface } from "@/lib/FrontendTypes";
-import CustomTooltip from "@/something/CustomTooltip";
-import { MoreVertical } from "lucide-react";
+
+import { TrendingUp } from "lucide-react";
 import { memo } from "react";
+import ClassDisplayerOptions from "./ClassDisplayerOptions";
+import { useNavigate } from "react-router-dom";
 
 const ClassDisplayer = memo(
   ({ classDetails }: { classDetails: ClassInterface }) => {
+    const navigate = useNavigate();
     return (
-      <div className="border-2  rounded-md  h-fit w-full cursor-pointer hover:border-green-600 transition-all duration-200 ">
+      <div
+        className="border-2  rounded-md  h-fit w-full cursor-pointer hover:border-green-600 transition-all duration-200 "
+        onClick={() => navigate(`/class/${classDetails._id}`)}
+      >
         <div className="h-32 rounded-sm relative ">
           <img
             src={
@@ -16,23 +22,25 @@ const ClassDisplayer = memo(
             alt="Class banner"
             className="h-full object-cover w-full rounded-sm rounded-b-none"
           />
-          <div className="absolute top-1.5 left-2 text-white flex justify-between items-center w-full px-3">
+          <div className="absolute top-1.5  text-white flex justify-between items-center w-full px-2">
             <div className=" first-letter:capitalize font-bold tracking-wide">
               {classDetails.name}
             </div>
-            <div>
-              <CustomTooltip title="More">
-                <div className="rounded-full p-1 h-fit w-fit  hover:bg-white/20 ">
-                  <MoreVertical className=" text-white top-0 right-2 size-5 shrink-0rounded-full  " />
-                </div>
-              </CustomTooltip>
-            </div>
+            <ClassDisplayerOptions classID={classDetails._id} />
+          </div>
+          <div className="absolute bottom-2 text-white text-xs left-2">
+            {classDetails.teacherName}
           </div>
         </div>
-        <div className="font-medium text-xs md:text-sm h-20 p-1 ">
+        <div className="font-medium text-xs  h-16 p-2 bg-white ">
           {classDetails.description}
         </div>
-        <div className="border p-2 bg-white rounded-sm"></div>
+        <div className=" border-t  border-b p-1 px-3 md:p-2 bg-white rounded-b-sm flex gap-3 items-center text-gray-700">
+          <TrendingUp className="size-5 " />
+          <div className="text-xs font-medium ">
+            Total members : {classDetails.members + classDetails.admins}
+          </div>
+        </div>
       </div>
     );
   }
