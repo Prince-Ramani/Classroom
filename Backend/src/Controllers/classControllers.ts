@@ -384,6 +384,7 @@ export const getMessages = async (
     }
 
     const classMessages = await Messages.find({ classID: classID })
+      .sort({ createdAt: -1 })
       .populate({
         path: "uploadedBy",
         select: "_id profilePicture username",

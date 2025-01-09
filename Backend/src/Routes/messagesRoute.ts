@@ -11,7 +11,7 @@ import { upload } from "../Cloudinary/Cloudinary";
 const router = express.Router();
 
 router.post(
-  "/sendmessage",
+  "/sendmessage/:classID",
   protectRoute,
   upload.fields([
     { name: "attachedImages", maxCount: 4 },

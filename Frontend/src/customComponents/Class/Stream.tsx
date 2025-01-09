@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuthUser } from "@/Context/authUserContext";
-import TextareaAutosize from "react-textarea-autosize";
 import { ClassInterface, shortMessageInetrface } from "@/lib/FrontendTypes";
 import MessageDisplayer from "./MessageDisplayer";
 import CreateMessage from "./createMessage";
@@ -36,7 +35,10 @@ const Stream = memo(() => {
           {typeof context.admins === "object" &&
           !!authUser &&
           context.admins.includes(authUser?._id) ? (
-            <CreateMessage profile={authUser.profilePicture} />
+            <CreateMessage
+              profile={authUser.profilePicture}
+              classID={classID}
+            />
           ) : (
             ""
           )}

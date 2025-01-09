@@ -19,7 +19,7 @@ export interface ClassInterface {
 }
 
 export interface shortMessageInetrface {
-  attchedImage: string[];
+  attachedImages: string[];
   attachedVideo: string;
   attchedPdfs: string[];
   commentLength: number;

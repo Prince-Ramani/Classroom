@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
-import { unlink } from "fs/promises";
+import { unlink } from "fs";
 import Messages from "../models/MessagesModel";
 import Classes from "../models/ClassModel";
-import { error } from "console";
 
 const FolderName = "GoogleClassroom";
 const ImageFolder = FolderName + "/images";
@@ -15,10 +14,8 @@ export const sendMessage = async (
 ): Promise<void> => {
   try {
     const userID = req.user as string;
-    const {
-      content,
-      classID,
-    }: { content: string | undefined; classID: string | undefined } = req.body;
+    const classID = req.params.classID;
+    const { content }: { content: string | undefined } = req.body;
     let attachedImagesarr: string[] = [];
     let attachedVideoUrl: string | undefined;
     let attachedPdfsarr: string[] = [];
@@ -35,7 +32,7 @@ export const sendMessage = async (
 
     if (content.length < 3 || content.length > 200) {
       res.status(400).json({
-        error: "Content should have charcter range betweeen 3 and 200!",
+        error: "Content should have character range betweeen 3 and 200!",
       });
       return;
     }
@@ -94,7 +91,9 @@ export const sendMessage = async (
               folder: ImageFolder,
             });
 
-            await unlink(img.path);
+            unlink(`../uploads/${img.filename}`, (_) => {
+              return;
+            });
 
             attachedImagesarr.push(uploadResult.secure_url);
           } catch (err) {
@@ -125,13 +124,17 @@ export const sendMessage = async (
     if (attachedVideo) {
       try {
         const uploadResult = await cloudinary.uploader.upload(
-          attachedVideo.path,
+          //@ts-ignore
+          attachedVideo[0].path,
           {
             resource_type: "video",
             folder: VideoFolder,
           }
         );
-        await unlink(attachedVideo.path);
+        //@ts-ignore
+        unlink(`../uploads/${attachedVideo[0].filename}`, (_) => {
+          return;
+        });
 
         attachedVideoUrl = uploadResult.secure_url;
       } catch (err) {
@@ -169,7 +172,10 @@ export const sendMessage = async (
               resource_type: "raw",
               folder: DocsFolder,
             });
-            await unlink(pdf.path);
+
+            unlink(`../uploads/${pdf.filename}`, (_) => {
+              return;
+            });
 
             attachedPdfsarr.push(uploadResult.secure_url);
           })
