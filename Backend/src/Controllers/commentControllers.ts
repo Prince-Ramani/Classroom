@@ -3,7 +3,6 @@ import Classes from "../models/ClassModel";
 import Messages from "../models/MessagesModel";
 import { Comments } from "../models/commentModel";
 import mongoose from "mongoose";
-import { error } from "console";
 
 export const sendComment = async (
   req: Request,

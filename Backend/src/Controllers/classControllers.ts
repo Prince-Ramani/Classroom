@@ -468,19 +468,41 @@ export const getFullMessage = async (
       return;
     }
 
+    res.status(200).json({ ...classMessage, classname: classOfMessage.name });
+  } catch (err) {
+    console.error("Error in getFullMessage controller : ", err);
+    res.status(500).json({ error: "Internal sever error!" });
+  }
+};
+
+export const getComments = async (req: Request, res: Response) => {
+  try {
+    const classID: string | undefined = req.params.classID;
+    const messageID: string | undefined = req.params.messageID;
+
+    if (!classID || classID.trim() === "" || typeof classID !== "string") {
+      res.status(400).json({ error: "Classid required!" });
+      return;
+    }
+
+    const classOfMessage = await Classes.findOne({ _id: classID }).lean();
+    if (!classOfMessage) {
+      res.status(404).json({ error: "No such class found!" });
+      return;
+    }
+
     const comments = await Comments.find({ classID, messageID })
       .populate({ path: "commenter", select: "_id username profilePicture" })
       .populate({
         path: "replies.replierId",
         select: "_id username profilePicture",
       })
+      .sort({ commentedAt: -1 })
       .lean();
 
-    res
-      .status(200)
-      .json({ ...classMessage, comments, classname: classOfMessage.name });
+    res.status(200).json(comments);
   } catch (err) {
-    console.error("Error in getFullMessage controller : ", err);
+    console.error("Error in getComments controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
   }
 };

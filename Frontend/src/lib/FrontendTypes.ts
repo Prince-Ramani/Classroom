@@ -42,8 +42,14 @@ export interface ReplyInterface {
   RepliedAt: string;
 }
 
+export interface CommenterInterface {
+  profilePicture: string;
+  username: string;
+  _id: string;
+}
+
 export interface commentInterface {
-  commenter: string;
+  commenter: CommenterInterface;
   _id: string;
   likes: string[];
   commentContent: string;

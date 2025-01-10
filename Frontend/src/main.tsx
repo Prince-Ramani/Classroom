@@ -16,7 +16,12 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthUserContextProvider>
-      <ToastContainer position="top-center" />
+      <ToastContainer
+        position="top-center"
+        theme="dark"
+        hideProgressBar={true}
+        autoClose={1500}
+      />
       <App />
     </AuthUserContextProvider>
   </QueryClientProvider>

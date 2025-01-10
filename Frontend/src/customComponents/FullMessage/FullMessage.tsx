@@ -9,6 +9,8 @@ import Loading from "@/components/Loading";
 import { FormateDate } from "@/lib/Date";
 import VideoPlayer from "@/components/VideoPLayer";
 import { FileText } from "lucide-react";
+import AddComment from "./AddComment";
+import Comment from "./Comment";
 
 const FullMessage = memo(() => {
   const { classID, messageID } = useParams();
@@ -29,13 +31,14 @@ const FullMessage = memo(() => {
       return data;
     },
   });
+
   return (
     <>
       {data && !isPending ? (
         <div className="border flex flex-col flex-grow  min-h-screen border-black">
           <Bar title={data.classname} />
           <Wrapper className="pt-7">
-            <div className=" w-full  flex flex-col gap-2">
+            <div className=" w-full  flex flex-col gap-2 ">
               <div className="flex gap-4 items-center border-b border-orange-800 pb-5">
                 <img
                   src={data.uploadedBy.profilePicture}
@@ -52,7 +55,7 @@ const FullMessage = memo(() => {
                 </div>
               </div>
 
-              <div className="border-b pb-4">
+              <div className=" pb-4">
                 <div className="md:text-lg break-all">{data.content}</div>
 
                 {data.attachedImages.length > 0 ||
@@ -109,6 +112,23 @@ const FullMessage = memo(() => {
                   ""
                 )}
               </div>
+            </div>
+
+            <div className="border-t-2 border-gray-500/30 w-full mt-5" />
+
+            <div className="w-full flex  flex-col">
+              <div className="font-semibold  sm:text-lg md:text-xl lg:text-2xl py-5">
+                Class comments
+              </div>
+
+              {classID !== undefined && messageID !== undefined ? (
+                <>
+                  <AddComment classID={classID} messageID={messageID} />
+                  <Comment messageID={messageID} classID={classID} />
+                </>
+              ) : (
+                ""
+              )}
             </div>
           </Wrapper>
           ;

@@ -1,6 +1,7 @@
 import VideoPlayer from "@/components/VideoPLayer";
 import { FormateDate } from "@/lib/Date";
 import { shortMessageInetrface } from "@/lib/FrontendTypes";
+import { FileText } from "lucide-react";
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +42,7 @@ const MessageDisplayer = memo(
             {message.attachedImages.map((i, index) => (
               <div key={index}>
                 <img
-                src={i}
+                  src={i}
                   className={` ${
                     message.attachedImages.length == 1
                       ? "h-full w-full max-h-[400px]"
@@ -58,7 +59,24 @@ const MessageDisplayer = memo(
         ) : (
           ""
         )}
-        <div className="border " />
+
+        {message.attachedPdfs.length > 0 ? (
+          <div className="flex gap-3 flex-col">
+            {message.attachedPdfs.map((p, index) => (
+              <a href={p.link} target="_blank" key={index}>
+                <div className="text-red-600  w-fit flex gap-3 items-center border border-red-600 rounded-full p-2 hover:bg-red-600/20 cursor-pointer">
+                  <FileText className="size-5" />
+                  <div className="font-semibold text-xs md:text-base">
+                    {p.fileName}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="border-t-2 my-2 " />
         <div className="flex w-full p-2 font-semibold ">
           Comments : {message.commentLength}
         </div>

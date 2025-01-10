@@ -6,6 +6,7 @@ import {
   editClass,
   getClass,
   getClasses,
+  getComments,
   getFullMessage,
   getMembers,
   getMessages,
@@ -32,5 +33,6 @@ router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removeadmin", protectRoute, removeAdmin);
 router.patch("/removemember", protectRoute, removeMember);
 router.get("/getmembers/:classID", protectRoute, getMembers);
+router.get("/getComments/:classID/:messageID", protectRoute, getComments);
 
 export default router;
