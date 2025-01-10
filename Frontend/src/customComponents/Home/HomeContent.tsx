@@ -11,7 +11,6 @@ const HomeContent = memo(() => {
       const res = await fetch("/api/class/getclasses");
       const data = await res.json();
       if ("error" in data) toast.error(data.error);
-      console.log(data);
       return data;
     },
   });

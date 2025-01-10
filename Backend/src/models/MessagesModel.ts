@@ -30,8 +30,8 @@ const messagesSchema = new mongoose.Schema(
     },
     attachedPdfs: [
       {
-        type: String,
-        required: false,
+        link: { type: String, required: true },
+        fileName: { type: String, required: true },
         default: [],
       },
     ],

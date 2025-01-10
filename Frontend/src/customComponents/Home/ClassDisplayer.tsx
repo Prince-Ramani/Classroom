@@ -38,7 +38,11 @@ const ClassDisplayer = memo(
         <div className=" border-t  border-b p-1 px-3 md:p-2 bg-white rounded-b-sm flex gap-3 items-center text-gray-700">
           <TrendingUp className="size-5 " />
           <div className="text-xs font-medium ">
-            Total members : {classDetails.members + classDetails.admins}
+            Total members :{" "}
+            {typeof classDetails.admins === "number" &&
+            typeof classDetails.members === "number"
+              ? classDetails.members + classDetails.admins
+              : ""}
           </div>
         </div>
       </div>

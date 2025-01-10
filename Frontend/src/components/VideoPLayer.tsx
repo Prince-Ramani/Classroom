@@ -7,7 +7,7 @@ const VideoPlayer = memo(({ source }: { source: string }) => {
     <div className="mt-2 w-full h-full  border-white/10 border  rounded-md overflow-hidden  ">
       <Plyr
         type="video"
-        className=" w-full h-fit object-contain    "
+        className=" w-full h-fit object-contain     "
         url={source}
         //@ts-ignore
         options={{

@@ -21,11 +21,51 @@ export interface ClassInterface {
 export interface shortMessageInetrface {
   attachedImages: string[];
   attachedVideo: string;
-  attchedPdfs: string[];
+  attachedPdfs: { fileName: string; link: string }[];
   commentLength: number;
   content: string;
   createdAt: string;
   isPinned: boolean;
+  classID: string;
+
+  uploadedBy: {
+    _id: string;
+    profilePicture: string;
+    username: string;
+  };
+  _id: string;
+}
+
+export interface ReplyInterface {
+  replierId: string;
+  replyContent: string;
+  RepliedAt: string;
+}
+
+export interface commentInterface {
+  commenter: string;
+  _id: string;
+  likes: string[];
+  commentContent: string;
+  classID: string;
+  messageID: string;
+  commentedAt: string;
+  replies: ReplyInterface[];
+}
+
+export interface FullMessageInterface {
+  attachedImages: string[];
+  attachedVideo: string;
+  attachedPdfs: { fileName: string; link: string }[];
+  comments: commentInterface[];
+  content: string;
+  createdAt: string;
+  isPinned: boolean;
+  classID: {
+    _id: string;
+    name: string;
+  };
+  classname: string;
 
   uploadedBy: {
     _id: string;

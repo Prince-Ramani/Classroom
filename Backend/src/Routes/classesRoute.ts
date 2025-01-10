@@ -7,6 +7,7 @@ import {
   getClass,
   getClasses,
   getFullMessage,
+  getMembers,
   getMessages,
   joinClass,
   leaveClass,
@@ -30,5 +31,6 @@ router.get("/getMessage/:classID/:messageID", protectRoute, getFullMessage);
 router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removeadmin", protectRoute, removeAdmin);
 router.patch("/removemember", protectRoute, removeMember);
+router.get("/getmembers/:classID", protectRoute, getMembers);
 
 export default router;

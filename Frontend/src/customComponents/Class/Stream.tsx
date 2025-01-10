@@ -30,12 +30,22 @@ const Stream = memo(() => {
 
   return (
     <Wrapper>
+      <div className="relative flex  p-1  h-40 md:h-48  lg:h-56 xl:h-72 my-2  items-center justify-center rounded-md lg:mx-20  w-full xl:mx-44">
+        <img
+          src={context.banner}
+          className="h-full w-full object-cover rounded-md  bg-purple-600 border-black/20"
+        />
+        <div className="absolute bottom-4 text-xl sm:text-2xl  md:top-2 left-4  lg:text-3xl font-semibold tracking-wide text-white  md:p-4 first-letter:capitalize">
+          {context.name}
+        </div>
+      </div>
       <div className="w-full h-full flex flex-col gap-4">
-        <div className="w-full  ">
+        <div className="w-full">
           {typeof context.admins === "object" &&
           !!authUser &&
           context.admins.includes(authUser?._id) ? (
             <CreateMessage
+              key={authUser._id}
               profile={authUser.profilePicture}
               classID={classID}
             />
@@ -47,7 +57,7 @@ const Stream = memo(() => {
         <div className="flex flex-col gap-2  h-full w-full   ">
           {messages && messages.length > 0
             ? messages.map((message: shortMessageInetrface) => (
-                <MessageDisplayer message={message} key={message._id} />
+                <MessageDisplayer key={message._id} message={message} />
               ))
             : ""}
         </div>

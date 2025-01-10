@@ -2,11 +2,16 @@ import VideoPlayer from "@/components/VideoPLayer";
 import { FormateDate } from "@/lib/Date";
 import { shortMessageInetrface } from "@/lib/FrontendTypes";
 import { memo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MessageDisplayer = memo(
   ({ message }: { message: shortMessageInetrface }) => {
+    const navigate = useNavigate();
     return (
-      <div className="border rounded-lg  p-2 lg:p-3 cursor-pointer">
+      <div
+        className="border rounded-lg  p-2 lg:p-3 cursor-pointer hover:bg-black/5 transition-colors active:bg-blue-200"
+        onClick={() => navigate(`/message/${message.classID}/${message._id}`)}
+      >
         <div className="items-center w-full  flex gap-2 md:gap-3 lg:gap-4 xl:gap-5 ">
           <img
             src={message.uploadedBy.profilePicture}
@@ -34,10 +39,9 @@ const MessageDisplayer = memo(
         {message.attachedImages.length > 0 ? (
           <div className="p-2 flex  gap-2 flex-wrap">
             {message.attachedImages.map((i, index) => (
-              <a href={i} target="_blank">
+              <div key={index}>
                 <img
-                  src={i}
-                  key={index}
+                src={i}
                   className={` ${
                     message.attachedImages.length == 1
                       ? "h-full w-full max-h-[400px]"
@@ -48,7 +52,7 @@ const MessageDisplayer = memo(
                       : ""
                   } object-cover rounded-sm`}
                 />
-              </a>
+              </div>
             ))}
           </div>
         ) : (

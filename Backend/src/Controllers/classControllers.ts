@@ -409,6 +409,36 @@ export const getMessages = async (
   }
 };
 
+export const getMembers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const classID: string | undefined = req.params.classID;
+
+    if (!classID || classID.trim() === "" || typeof classID !== "string") {
+      res.status(400).json({ error: "Class id required!" });
+      return;
+    }
+
+    const classDetails = await Classes.findOne({ _id: classID })
+      .select("members admins")
+      .populate({
+        path: "members",
+        select: "_id profilePicture username",
+      })
+      .populate({
+        path: "admins",
+        select: "_id profilePicture username",
+      });
+
+    res.status(200).json(classDetails);
+  } catch (err) {
+    res.status(500).json({ error: "Internal sever error!" });
+    console.log("Error in getMessages controller : ", err);
+  }
+};
+
 export const getFullMessage = async (
   req: Request,
   res: Response
@@ -428,18 +458,27 @@ export const getFullMessage = async (
       return;
     }
 
-    const classMessage = await Messages.find({ _id: messageID }).lean();
+    const classMessage = await Messages.findOne({ _id: messageID })
+      .populate({ path: "uploadedBy", select: "profilePicture _id username" })
+      .populate({ path: "classID", select: "_id name" })
+      .lean();
 
     if (!classMessage) {
       res.status(404).json({ error: "No such message found!" });
       return;
     }
 
-    const comments = await Comments.findOne({ classID, messageID })
-      .populate("commenter replierId")
+    const comments = await Comments.find({ classID, messageID })
+      .populate({ path: "commenter", select: "_id username profilePicture" })
+      .populate({
+        path: "replies.replierId",
+        select: "_id username profilePicture",
+      })
       .lean();
 
-    res.status(200).json({ ...classMessage, ...comments });
+    res
+      .status(200)
+      .json({ ...classMessage, comments, classname: classOfMessage.name });
   } catch (err) {
     console.error("Error in getFullMessage controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });

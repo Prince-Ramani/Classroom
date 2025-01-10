@@ -18,7 +18,7 @@ export const sendMessage = async (
     const { content }: { content: string | undefined } = req.body;
     let attachedImagesarr: string[] = [];
     let attachedVideoUrl: string | undefined;
-    let attachedPdfsarr: string[] = [];
+    let attachedPdfsarr: { link: string; fileName: string }[] = [];
 
     if (!userID) {
       res.status(403).json({ error: "Unauthorized!" });
@@ -177,7 +177,10 @@ export const sendMessage = async (
               return;
             });
 
-            attachedPdfsarr.push(uploadResult.secure_url);
+            attachedPdfsarr.push({
+              fileName: pdf.originalname,
+              link: uploadResult.secure_url,
+            });
           })
         );
       } catch (err) {
@@ -190,7 +193,7 @@ export const sendMessage = async (
     if (attachedPdfsarr.length > 0) {
       const message = new Messages({
         content,
-        attachedPdfss: attachedPdfsarr,
+        attachedPdfs: attachedPdfsarr,
         uploadedBy: userID,
         classID,
       });
@@ -467,7 +470,7 @@ export const deleteMessaege = async (
       await Promise.all(
         messageToDelete.attachedPdfs.map(async (doc) => {
           try {
-            const docPath = doc.split("/").splice(-1)[0].split(".")[0];
+            const docPath = doc.link.split("/").splice(-1)[0].split(".")[0];
             const docID = `${ImageFolder}/${docPath}`;
             await cloudinary.uploader.destroy(docID, {
               resource_type: "raw",

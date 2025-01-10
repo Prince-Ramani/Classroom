@@ -14,7 +14,8 @@ import Home from "./customComponents/Home/Home";
 import ClassLayout from "./customComponents/Class/Layout.tsx/ClassLayout";
 import Stream from "./customComponents/Class/Stream";
 import Classwork from "./customComponents/Class/Classwork";
-import People from "./customComponents/Class/People";
+import People from "./customComponents/Class/People/People";
+import FullMessage from "./customComponents/FullMessage/FullMessage";
 
 const App = () => {
   const { setAuthUser } = useAuthUser();
@@ -73,6 +74,11 @@ const App = () => {
             element={isLoggedIn ? <People /> : <Navigate to="/signup" />}
           />
         </Route>
+
+        <Route
+          path="message/:classID/:messageID"
+          element={isLoggedIn ? <FullMessage /> : <Navigate to="/signup" />}
+        />
         <Route
           path="*"
           element={isLoggedIn ? <Home /> : <Navigate to="/signup" />}

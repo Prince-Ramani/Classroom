@@ -138,8 +138,11 @@ const CreateMessage = memo(
 
     return (
       <>
-        {isPending ? <Loading /> : ""}
-        <div className="border w-full bg-white p-4  rounded-lg shadow-md  shadow-gray-500/30 flex items-center ">
+        <div
+          className={`border w-full bg-white p-4  rounded-lg shadow-md  shadow-gray-500/30 flex items-center ${
+            isPending ? "pointer-events-none cursor-not-allowed opacity-50" : ""
+          } `}
+        >
           <img
             src={profile}
             className="size-10 xl:size-12 rounded-full self-start"
@@ -218,6 +221,16 @@ const CreateMessage = memo(
                 Post
               </Button>
             </div>
+            {isPending ? (
+              <div
+                className=" w-full  flex
+          items-center justify-center p-2"
+              >
+                <Loading />
+              </div>
+            ) : (
+              ""
+            )}
             {imagesPreview.length > 0 ? (
               <div
                 className={`flex items-center justify-start flex-wrap gap-2 `}
