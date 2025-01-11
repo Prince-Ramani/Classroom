@@ -16,6 +16,7 @@ import Stream from "./customComponents/Class/Stream";
 import Classwork from "./customComponents/Class/Classwork";
 import People from "./customComponents/Class/People/People";
 import FullMessage from "./customComponents/FullMessage/FullMessage";
+import Settings from "./customComponents/FullMessage/Settings";
 
 const App = () => {
   const { setAuthUser } = useAuthUser();
@@ -72,6 +73,11 @@ const App = () => {
           <Route
             path="people"
             element={isLoggedIn ? <People /> : <Navigate to="/signup" />}
+          />
+
+          <Route
+            path="settings"
+            element={isLoggedIn ? <Settings /> : <Navigate to="/signup" />}
           />
         </Route>
 

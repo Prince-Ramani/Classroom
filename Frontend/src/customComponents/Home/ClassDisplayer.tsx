@@ -44,7 +44,7 @@ const ClassDisplayer = memo(
             {classDetails.teacherName}
           </div>
         </div>
-        <div className="font-medium text-xs  h-16 p-2 bg-white ">
+        <div className="font-medium text-xs  h-16 p-2 bg-white break-all lg:text-sm ">
           {classDetails.description}
         </div>
         <div className=" border-t  border-b p-1 px-3 md:p-2 bg-white rounded-b-sm flex gap-3 items-center text-gray-700">

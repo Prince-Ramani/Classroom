@@ -60,7 +60,7 @@ export const createClass = async (
       });
 
       await newClass.save();
-      user.classesJoined.push(newClass._id);
+      user.classesJoined.push(newClass._id as mongoose.Types.ObjectId);
       await user.save();
       res.status(200).json({ message: "Class created successfully!" });
       return;
@@ -95,7 +95,9 @@ export const joinClass = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const classToJoin = await Classes.findById(classID);
+    const address = parseInt(classID);
+
+    const classToJoin = await Classes.findOne({ uniqueAddress: address });
 
     if (!classToJoin) {
       res.status(404).json({ error: "No such class found!" });
@@ -120,7 +122,7 @@ export const joinClass = async (req: Request, res: Response): Promise<void> => {
     if (!me) return;
 
     classToJoin.members.push(new mongoose.Types.ObjectId(userID));
-    me.classesJoined.push(classToJoin._id);
+    me.classesJoined.push(classToJoin._id as mongoose.Types.ObjectId);
     await classToJoin.save();
     await me.save();
 
@@ -190,7 +192,9 @@ export const leaveClass = async (
     }
 
     me.classesJoined = me.classesJoined.filter(
-      (join) => join.toString() !== classToLeave._id.toString()
+      (join) =>
+        join.toString() !==
+        (classToLeave._id as mongoose.Types.ObjectId).toString()
     );
 
     await classToLeave.save();
@@ -367,6 +371,48 @@ export const getClass = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json(askedClass);
   } catch (err) {
     console.error("Error in getClass controller : ", err);
+    res.status(500).json({ error: "Internal sever error!" });
+  }
+};
+
+export const getClassSettings = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const classID: string | undefined = req.params.classID;
+    const me = req.user;
+
+    if (!me) {
+      res.status(400).json({ error: "Unauthrized!" });
+      return;
+    }
+    if (!classID || classID.trim() === "" || typeof classID !== "string") {
+      res.status(400).json({ error: "Class id required!" });
+      return;
+    }
+
+    const askedClass = await Classes.findOne({ _id: classID })
+      .select(
+        "banner _id createdAt description name teacherName admins uniqueAddress "
+      )
+      .lean();
+
+    if (!askedClass) {
+      res.status(404).json({ error: "No such class found!" });
+      return;
+    }
+
+    const isAdmin = askedClass.admins.some((i) => i.toString() === me);
+
+    if (!isAdmin) {
+      res.status(400).json({ error: "Only admins can access class settings!" });
+      return;
+    }
+
+    res.status(200).json(askedClass);
+  } catch (err) {
+    console.error("Error in getClassSettings controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
   }
 };
@@ -702,7 +748,9 @@ export const removeMember = async (
       (member) => member.toString() !== userID
     );
     personToBeRemoved.classesJoined = personToBeRemoved.classesJoined.filter(
-      (c) => c.toString() !== classToUpdate._id.toString()
+      (c) =>
+        c.toString() !==
+        (classToUpdate._id as mongoose.Types.ObjectId).toString()
     );
 
     await classToUpdate.save();

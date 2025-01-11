@@ -10,11 +10,35 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const HomeBar = memo(() => {
   const { authUser } = useAuthUser();
   const [isOpen, setIsOpen] = useState(false);
   const [joinId, setJoinId] = useState("");
+
+  const queryclient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/class/joinclass`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ classID: joinId }),
+      });
+      const data = await res.json();
+      return data;
+    },
+    onSuccess: (data) => {
+      if ("error" in data) return toast.error(data.error);
+      toast.success(data.message);
+      queryclient.invalidateQueries({ queryKey: ["classes"] });
+      setIsOpen(false);
+    },
+  });
 
   return (
     <>
@@ -24,7 +48,7 @@ const HomeBar = memo(() => {
             <DialogContent className="  flex items-center border-none justify-center pb-10 min-w-full h-full    z-50 flex-col bg-blue-200/10 bg-opacity-50 ">
               <DialogTitle />
               <div className="bg-black p-3 rounded-3xl max-w-[275px] sm:max-w-[300px]  md:max-w-xs w-full">
-                {0 ? (
+                {isPending ? (
                   <div className=" absolute inset-0 z-[51] flex justify-center items-center rounded-2xl bg-blue-50/20 cursor-not-allowed">
                     <Loading />
                   </div>
@@ -54,8 +78,8 @@ const HomeBar = memo(() => {
                         className={`bg-white text-black font-semibold rounded-full p-2 text-sm ${
                           1 ? "opacity-75" : "hover:opacity-90"
                         }  `}
-                        // disabled={1}
-                        // onClick={() => mutate()}
+                        disabled={isPending}
+                        onClick={() => mutate()}
                       >
                         Join
                       </button>
@@ -65,7 +89,7 @@ const HomeBar = memo(() => {
                           1 ? "opacity-75" : "hover:bg-white/10"
                         } 
                   `}
-                        // disabled={isPending}
+                        disabled={isPending}
                         onClick={() => {
                           setIsOpen(false);
                         }}

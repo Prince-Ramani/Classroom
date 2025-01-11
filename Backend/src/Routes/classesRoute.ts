@@ -6,6 +6,7 @@ import {
   editClass,
   getClass,
   getClasses,
+  getClassSettings,
   getComments,
   getFullMessage,
   getMembers,
@@ -25,6 +26,7 @@ router.post("/leaveclass/:classID", protectRoute, leaveClass);
 router.delete("/deleteclass", protectRoute, deleteClass);
 router.patch("/editclass", protectRoute, editClass);
 router.get("/getclasses", protectRoute, getClasses);
+router.get("/getclass/settings/:classID", protectRoute, getClassSettings);
 
 router.get("/getclass/:classID", protectRoute, getClass);
 router.get("/getmessages/:classID", protectRoute, getMessages);
