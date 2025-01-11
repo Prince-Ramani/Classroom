@@ -37,9 +37,14 @@ export interface shortMessageInetrface {
 }
 
 export interface ReplyInterface {
-  replierId: string;
+  replierId: {
+    username: string;
+    profilePicture: string;
+    _id: string;
+  };
   replyContent: string;
   RepliedAt: string;
+  _id: string;
 }
 
 export interface CommenterInterface {

@@ -116,7 +116,7 @@ const ClassHeader = memo(
           <div className="flex gap-10  items-center  ">
             <img
               src={authUser?.profilePicture}
-              className="size-10 rounded-full shrink-0 object-cover hover:border border-black active:border"
+              className="size-10 rounded-full shrink-0 object-cover hover: active:border"
             />
           </div>
         </div>

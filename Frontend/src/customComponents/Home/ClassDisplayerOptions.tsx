@@ -29,7 +29,7 @@ const ClassDisplayerOptions = memo(
       },
     });
     return (
-      <div>
+      <span>
         <Popover>
           <PopoverTrigger asChild>
             <div className="rounded-full p-1 h-fit w-fit  hover:bg-white/20 ">
@@ -53,7 +53,7 @@ const ClassDisplayerOptions = memo(
             </button>
           </PopoverContent>
         </Popover>
-      </div>
+      </span>
     );
   }
 );

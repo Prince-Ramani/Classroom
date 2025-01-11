@@ -8,10 +8,22 @@ import { useNavigate } from "react-router-dom";
 const ClassDisplayer = memo(
   ({ classDetails }: { classDetails: ClassInterface }) => {
     const navigate = useNavigate();
+    const handleClick = (e: any) => {
+      console.log(e.target.tagName);
+      if (
+        e.target.tagName === "circle" ||
+        e.target.tagName === "SPAN" ||
+        e.target.tagName === "BUTTON" ||
+        e.target.tagName === "svg"
+      )
+        return;
+
+      navigate(`/class/${classDetails._id}`);
+    };
     return (
       <div
         className="border-2  rounded-md  h-fit w-full cursor-pointer hover:border-green-600 transition-all duration-200 "
-        onClick={() => navigate(`/class/${classDetails._id}`)}
+        onClick={handleClick}
       >
         <div className="h-32 rounded-sm relative ">
           <img

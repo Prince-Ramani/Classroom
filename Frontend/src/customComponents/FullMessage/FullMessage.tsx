@@ -27,7 +27,6 @@ const FullMessage = memo(() => {
         toast.error(data.error);
         return;
       }
-      console.log(data);
       return data;
     },
   });
@@ -35,7 +34,7 @@ const FullMessage = memo(() => {
   return (
     <>
       {data && !isPending ? (
-        <div className="border flex flex-col flex-grow  min-h-screen border-black">
+        <div className="flex flex-col flex-grow  min-h-screen">
           <Bar title={data.classname} />
           <Wrapper className="pt-7">
             <div className=" w-full  flex flex-col gap-2 ">

@@ -1,4 +1,3 @@
-import CustomTooltip from "@/something/CustomTooltip";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Send } from "lucide-react";
 import { memo, useState } from "react";
@@ -48,10 +47,8 @@ const AddComment = memo(
       mutate();
     };
 
-    console.log(commentContent);
-
     return (
-      <div className="w-full flex items-start   rounded-md  mb-5 ">
+      <div className="w-full flex items-start   rounded-md gap-1  mb-5 ">
         <TextareaAutosize
           className="w-full bg-transparent resize-none  border-2 border-black placeholder:text-black p-1 rounded-md  focus:placeholder:text-blue-600  placeholder:text-base focus:border-blue-600 focus:outline-none text-sm md:text-lg "
           minRows={2}
@@ -60,18 +57,17 @@ const AddComment = memo(
           placeholder="Add comment"
           onChange={(e) => setCommentContent(e.target.value)}
         />
-        <div
-          className="ml-auto cursor-pointer hover:bg-black/20 rounded-full p-2"
+        <button
+          className="ml-auto cursor-pointer hover:bg-black/10 focus:outline-blue-500 rounded-full p-2"
           onClick={handleClick}
+          disabled={isPending}
         >
-          <CustomTooltip title="Send">
-            <Send
-              className={`ml-auto  size-7 md:size-8 text-black ${
-                commentContent.length > 3 ? "text-blue-600" : ""
-              }`}
-            />
-          </CustomTooltip>
-        </div>
+          <Send
+            className={`ml-auto  size-7 md:size-8 text-black ${
+              commentContent.length > 3 ? "text-blue-600" : ""
+            }`}
+          />
+        </button>
       </div>
     );
   }

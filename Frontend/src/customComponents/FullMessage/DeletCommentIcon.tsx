@@ -1,8 +1,3 @@
-import { useAuthUser } from "@/Context/authUserContext";
-import AddButton from "@/something/AddButton";
-
-import { Menu } from "lucide-react";
-import { memo, useState } from "react";
 import Loading from "@/components/Loading";
 import {
   Dialog,
@@ -10,11 +5,37 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAuthUser } from "@/Context/authUserContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Trash } from "lucide-react";
+import { memo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const HomeBar = memo(() => {
-  const { authUser } = useAuthUser();
+const DeleteCommentIcon = memo(({ commentID }: { commentID: string }) => {
+  const queryclient = useQueryClient();
+  const { classID, messageID } = useParams();
+  if (!classID || !messageID) return;
   const [isOpen, setIsOpen] = useState(false);
-  const [joinId, setJoinId] = useState("");
+  const { authUser } = useAuthUser();
+  console.log(authUser);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/comment/deleteComment/${commentID}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      return data;
+    },
+    onSuccess: (data) => {
+      if ("error" in data) return toast.error(data.error);
+      toast.success(data.message);
+      queryclient.invalidateQueries({
+        queryKey: [classID, messageID, "comments"],
+      });
+      setIsOpen(false);
+    },
+  });
 
   return (
     <>
@@ -24,7 +45,7 @@ const HomeBar = memo(() => {
             <DialogContent className="  flex items-center border-none justify-center pb-10 min-w-full h-full    z-50 flex-col bg-blue-200/10 bg-opacity-50 ">
               <DialogTitle />
               <div className="bg-black p-3 rounded-3xl max-w-[275px] sm:max-w-[300px]  md:max-w-xs w-full">
-                {0 ? (
+                {isPending ? (
                   <div className=" absolute inset-0 z-[51] flex justify-center items-center rounded-2xl bg-blue-50/20 cursor-not-allowed">
                     <Loading />
                   </div>
@@ -34,38 +55,33 @@ const HomeBar = memo(() => {
                 <DialogDescription />
                 <div className=" w-full  flex flex-col p-4 ">
                   <div className="font-bold ">
-                    <div className="text-white font-extrabold text-xl tracking-wide">
-                      Join class{" "}
+                    <div className="text-red-700 font-extrabold">
+                      Delete Comment
                     </div>
+                    <div className="text-white">@{authUser?.username}?</div>
                   </div>
                   <div className="text-gray-500  leading-tight text-sm tracking-wide pt-2">
-                    <div className="text-white pb-4 font-semibold md:text-lg ">
-                      Enter 4 digit class id
-                    </div>
-                    <input
-                      className="bg-transparent border border-white   w-full p-2 text-white focus:outline-2 focus:outline-blue-500 rounded-md"
-                      value={joinId}
-                      onChange={(e) => setJoinId(e.target.value)}
-                    />
+                    "Are you sure you want to delete this comment?! This comment
+                    will no longer show up in this message."
                   </div>
                   <div>
                     <div className="flex flex-col gap-2 mt-7">
                       <button
                         className={`bg-white text-black font-semibold rounded-full p-2 text-sm ${
-                          1 ? "opacity-75" : "hover:opacity-90"
+                          isPending ? "opacity-75" : "hover:opacity-90"
                         }  `}
-                        // disabled={1}
-                        // onClick={() => mutate()}
+                        disabled={isPending}
+                        onClick={() => mutate()}
                       >
-                        Join
+                        Delete
                       </button>
 
                       <button
                         className={`bg-transparent  ring-1 text-white ring-white/50 font-semibold rounded-full p-2 text-sm ${
-                          1 ? "opacity-75" : "hover:bg-white/10"
+                          isPending ? "opacity-75" : "hover:bg-white/10"
                         } 
-                  `}
-                        // disabled={isPending}
+                      `}
+                        disabled={isPending}
                         onClick={() => {
                           setIsOpen(false);
                         }}
@@ -82,25 +98,14 @@ const HomeBar = memo(() => {
       ) : (
         ""
       )}
-      <div className="border-b-2 p-3  backdrop-blur-lg  z-20 sticky  top-0 w-full flex items-center justify-between  lg:px-10">
-        <div className="flex items-center gap-5">
-          <div>
-            <Menu />
-          </div>
-          <div className="font-semibold text-xl text-gray-700">Classroom</div>
-        </div>
-        <div>
-          <div className="flex gap-10 items-center">
-            <AddButton setIsOpen={setIsOpen} />
-            <img
-              src={authUser?.profilePicture}
-              className="size-10 rounded-full shrink-0 object-cover hover:border border-black active:border"
-            />
-          </div>
-        </div>
-      </div>
+      <button
+        className="p-1 hover:bg-rose-600/20 rounded-full ml-auto cursor-pointer "
+        onClick={() => setIsOpen(true)}
+      >
+        <Trash className="size-4 sm:size-5 text-red-900" />
+      </button>
     </>
   );
 });
 
-export default HomeBar;
+export default DeleteCommentIcon;

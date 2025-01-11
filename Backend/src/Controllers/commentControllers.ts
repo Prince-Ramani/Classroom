@@ -121,7 +121,7 @@ export const deleteComment = async (
     }
 
     await Comments.findByIdAndDelete(comment._id);
-    res.status(200).json({ message: "Comment delted successfully!" });
+    res.status(200).json({ message: "Comment deleted successfully!" });
   } catch (err) {
     console.error("Error in deleteComment controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });

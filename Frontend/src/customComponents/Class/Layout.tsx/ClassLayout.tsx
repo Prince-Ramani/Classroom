@@ -26,7 +26,7 @@ const ClassLayout = memo(() => {
     refetchOnWindowFocus: false,
   });
   return (
-    <div className="min-h-screen w-full flex flex-col ">
+    <div className="min-h-screen w-full flex flex-col  ">
       <ClassHeader classname={data?.name} classID={data?._id} />
       <Bar title={data?.name} className="h-12 md:hidden sm:h-14" />
       <main className="min-h-full w-full flex-col flex flex-grow sm:p-1 sm:px-2 md:p-2 ">
