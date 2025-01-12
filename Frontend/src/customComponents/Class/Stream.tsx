@@ -57,7 +57,15 @@ const Stream = memo(() => {
         <div className="flex flex-col gap-2  h-full w-full   ">
           {messages && messages.length > 0
             ? messages.map((message: shortMessageInetrface) => (
-                <MessageDisplayer key={message._id} message={message} />
+                <MessageDisplayer
+                  key={message._id}
+                  message={message}
+                  isAdmin={
+                    typeof context.admins === "object" &&
+                    !!authUser &&
+                    context.admins.includes(authUser?._id)
+                  }
+                />
               ))
             : ""}
         </div>

@@ -75,10 +75,10 @@ const HomeBar = memo(() => {
                   <div>
                     <div className="flex flex-col gap-2 mt-7">
                       <button
-                        className={`bg-white text-black font-semibold rounded-full p-2 text-sm ${
-                          1 ? "opacity-75" : "hover:opacity-90"
+                        className={`bg-blue-400 text-white disabled:bg-red-500 font-semibold rounded-full p-2 text-sm ${
+                          isPending ? "opacity-75" : "hover:opacity-90"
                         }  `}
-                        disabled={isPending}
+                        disabled={joinId.length < 4}
                         onClick={() => mutate()}
                       >
                         Join

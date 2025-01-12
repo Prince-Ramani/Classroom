@@ -9,7 +9,6 @@ const ClassDisplayer = memo(
   ({ classDetails }: { classDetails: ClassInterface }) => {
     const navigate = useNavigate();
     const handleClick = (e: any) => {
-      console.log(e.target.tagName);
       if (
         e.target.tagName === "circle" ||
         e.target.tagName === "SPAN" ||

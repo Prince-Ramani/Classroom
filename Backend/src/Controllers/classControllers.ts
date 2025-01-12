@@ -430,7 +430,7 @@ export const getMessages = async (
     }
 
     const classMessages = await Messages.find({ classID: classID })
-      .sort({ createdAt: -1 })
+      .sort({ isPinned: -1, createdAt: -1 })
       .populate({
         path: "uploadedBy",
         select: "_id profilePicture username",
@@ -492,6 +492,12 @@ export const getFullMessage = async (
   try {
     const classID: string | undefined = req.params.classID;
     const messageID: string | undefined = req.params.messageID;
+    const userID: string | undefined = req.user;
+
+    if (!userID || userID.trim() === "") {
+      res.status(400).json({ error: "Unauthorized!" });
+      return;
+    }
 
     if (!classID || classID.trim() === "" || typeof classID !== "string") {
       res.status(400).json({ error: "Classid required!" });
@@ -505,16 +511,27 @@ export const getFullMessage = async (
     }
 
     const classMessage = await Messages.findOne({ _id: messageID })
+      .populate({ path: "classID", select: "_id name admins" })
       .populate({ path: "uploadedBy", select: "profilePicture _id username" })
-      .populate({ path: "classID", select: "_id name" })
       .lean();
 
     if (!classMessage) {
       res.status(404).json({ error: "No such message found!" });
       return;
     }
+    //@ts-ignore
+    const isAdmin = classMessage.classID.admins.some(
+      (p: mongoose.Types.ObjectId) => p.toString() === userID
+    );
+    //@ts-ignore
+    const classname = classMessage.classID.name || "";
 
-    res.status(200).json({ ...classMessage, classname: classOfMessage.name });
+    res.status(200).json({
+      ...classMessage,
+      classID: classMessage.classID._id,
+      isAdmin,
+      classname,
+    });
   } catch (err) {
     console.error("Error in getFullMessage controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
@@ -576,75 +593,13 @@ export const newAdmin = async (req: Request, res: Response): Promise<void> => {
     }
 
     if (personID === userID) {
-      res.status(400).json({ error: "You are already admin!" });
+      res
+        .status(400)
+        .json({ error: "You cannot remove yourself from being admin!" });
       return;
     }
 
     const classToUpdate = await Classes.findOne({ _id: classID });
-
-    if (!classToUpdate) {
-      res.status(404).json({ error: "No such class found!" });
-      return;
-    }
-
-    const isAdmin = classToUpdate.admins.some(
-      (admin) => admin.toString() === userID
-    );
-
-    if (isAdmin) {
-      res.status(400).json({ message: "user is already admin!" });
-      return;
-    }
-
-    const personToBeAdmin = await User.exists({ _id: personID });
-
-    if (!personToBeAdmin) {
-      res.status(404).json({ error: "No such user found!" });
-      return;
-    }
-
-    classToUpdate.admins.push(personToBeAdmin._id);
-    await classToUpdate.save();
-    res.status(200).json({ message: "New admin created!" });
-  } catch (err) {
-    console.error("Error in newAdmin controller : ", err);
-    res.status(500).json({ error: "Internal sever error!" });
-  }
-};
-
-export const removeAdmin = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const {
-      classID,
-      personID,
-    }: {
-      classID: string | undefined;
-      personID: string | undefined;
-    } = req.body;
-
-    const userID = req.user as string;
-
-    if (!classID || typeof classID !== "string" || classID.trim() === "") {
-      res.status(400).json({ error: "Class id required!" });
-      return;
-    }
-
-    if (!personID || typeof personID !== "string" || personID.trim() === "") {
-      res.status(400).json({ error: "Admin id required!" });
-      return;
-    }
-
-    if (personID === userID) {
-      res
-        .status(400)
-        .json({ error: "You cann't remove youself from being admin!" });
-      return;
-    }
-
-    const classToUpdate = await Classes.findById(classID);
 
     if (!classToUpdate) {
       res.status(404).json({ error: "No such class found!" });
@@ -662,18 +617,22 @@ export const removeAdmin = async (
       return;
     }
 
-    const personToBeRemoved = await User.findById(personID);
+    const personIsAdmin = classToUpdate.admins.some(
+      (admin) => admin.toString() === personID
+    );
 
-    if (!personToBeRemoved) {
-      res.status(404).json({ error: "No such user found!" });
-      return;
+    if (personIsAdmin) {
+      classToUpdate.admins = classToUpdate.admins.filter(
+        (admin) => admin.toString() !== personID.toString()
+      );
+    } else {
+      classToUpdate.admins.push(new mongoose.Types.ObjectId(personID));
     }
 
-    classToUpdate.admins = classToUpdate.admins.filter(
-      (admin) => admin.toString() !== personToBeRemoved._id.toString()
-    );
     await classToUpdate.save();
-    res.status(200).json({ message: "Removed from admin!" });
+    res.status(200).json({
+      message: `${!isAdmin ? "New admin created" : "Removed from admin!"}`,
+    });
   } catch (err) {
     console.error("Error in newAdmin controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
@@ -685,13 +644,9 @@ export const removeMember = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      classID,
-      personID,
-    }: {
-      classID: string | undefined;
-      personID: string | undefined;
-    } = req.body;
+    const classID: string | undefined = req.params.classID;
+
+    const personID: string | undefined = req.params.personID;
 
     const userID = req.user as string;
 

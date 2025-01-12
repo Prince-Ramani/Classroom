@@ -13,8 +13,21 @@ const messagesSchema = new mongoose.Schema(
     },
     classID: {
       type: mongoose.Schema.Types.ObjectId,
-      res: "Classes",
+      ref: "Classes",
       required: true,
+    },
+
+    type: {
+      type: String,
+      enum: ["Assignment", "Normal", "Classwork"],
+      default: "Normal",
+      required: true,
+    },
+
+    dueDate: {
+      type: String,
+      required: false,
+      default: "",
     },
 
     attachedImages: [

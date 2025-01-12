@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { validateEmail } from "@/lib/func";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Lock, Mail, OctagonAlert, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ const Signup = () => {
     email: "",
     password: "",
   });
+
+  const queryclient = useQueryClient();
 
   const [verifyPass, setVerifyPass] = useState("");
 
@@ -40,6 +42,7 @@ const Signup = () => {
         });
       }
       toast.success(data.message);
+      queryclient.invalidateQueries({ queryKey: ["authUser"] });
     },
   });
 

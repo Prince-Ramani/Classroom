@@ -45,7 +45,7 @@ const ClassHeader = memo(
         <div className="flex items-center gap-5 p-4 px-3">
           <div
             className="hover:bg-gray-500/20 rounded-full p-1 cursor-pointer"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/`)}
           >
             <CustomTooltip title="Back">
               <ArrowLeft className="shrink-0 " />

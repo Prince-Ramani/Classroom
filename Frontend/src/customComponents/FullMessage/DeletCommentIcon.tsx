@@ -18,7 +18,6 @@ const DeleteCommentIcon = memo(({ commentID }: { commentID: string }) => {
   if (!classID || !messageID) return;
   const [isOpen, setIsOpen] = useState(false);
   const { authUser } = useAuthUser();
-  console.log(authUser);
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       const res = await fetch(`/api/comment/deleteComment/${commentID}`, {

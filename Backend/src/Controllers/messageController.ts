@@ -15,7 +15,24 @@ export const sendMessage = async (
   try {
     const userID = req.user as string;
     const classID = req.params.classID;
-    const { content }: { content: string | undefined } = req.body;
+    const {
+      content,
+      dueDate,
+    }: {
+      content: string | undefined;
+      dueDate: string | undefined;
+    } = req.body;
+
+    let {
+      type,
+    }: {
+      type: "Assignment" | "Normal" | "Classwork" | undefined;
+    } = req.body;
+
+    if (!type) {
+      type = "Normal";
+    }
+
     let attachedImagesarr: string[] = [];
     let attachedVideoUrl: string | undefined;
     let attachedPdfsarr: { link: string; fileName: string }[] = [];
@@ -30,9 +47,9 @@ export const sendMessage = async (
       return;
     }
 
-    if (content.length < 3 || content.length > 200) {
+    if (content.length < 3 || content.length > 1200) {
       res.status(400).json({
-        error: "Content should have character range betweeen 3 and 200!",
+        error: "Content should have character range betweeen 3 and 1200!",
       });
       return;
     }
@@ -114,6 +131,8 @@ export const sendMessage = async (
         attachedImages: attachedImagesarr,
         uploadedBy: userID,
         classID,
+        type,
+        dueDate: dueDate || "",
       });
 
       await message.save();
@@ -150,6 +169,8 @@ export const sendMessage = async (
         attachedVideo: attachedVideoUrl,
         uploadedBy: userID,
         classID,
+        dueDate: dueDate || "",
+        type,
       });
       await message.save();
 
@@ -196,6 +217,8 @@ export const sendMessage = async (
         attachedPdfs: attachedPdfsarr,
         uploadedBy: userID,
         classID,
+        dueDate: dueDate || "",
+        type,
       });
       await message.save();
 
@@ -207,6 +230,8 @@ export const sendMessage = async (
       content,
       uploadedBy: userID,
       classID,
+      type,
+      dueDate: dueDate || "",
     });
     await message.save();
 
@@ -224,14 +249,13 @@ export const editMessage = async (
 ): Promise<void> => {
   try {
     const {
-      classID,
-      messageID,
       content,
     }: {
-      classID: string | undefined;
-      messageID: string | undefined;
       content: string | undefined;
     } = req.body;
+
+    const classID: string | undefined = req.params.classID;
+    const messageID: string | undefined = req.params.messageID;
 
     const userID = req.user;
 
@@ -252,6 +276,12 @@ export const editMessage = async (
 
     if (!content || content.trim() === "") {
       res.status(400).json({ error: "Message content required!" });
+      return;
+    }
+    if (content.length < 3 || content.length > 1200) {
+      res.status(400).json({
+        error: "Content should have character range betweeen 3 and 1200!",
+      });
       return;
     }
 
@@ -283,8 +313,7 @@ export const editMessage = async (
     message.content = content;
     await message.save();
 
-    res.json(200).json({ message: "Message edited successfully!" });
-    return;
+    res.status(200).json({ message: "Message edited successfully!" });
   } catch (err) {
     console.error("Error in editMessage Controller : ", err);
     res.status(500).json("Internal sever error!");
@@ -296,13 +325,8 @@ export const pinMessage = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      classID,
-      messageID,
-    }: {
-      classID: string | undefined;
-      messageID: string | undefined;
-    } = req.body;
+    const classID: string | undefined = req.params.classID;
+    const messageID: string | undefined = req.params.messageID;
 
     const userID = req.user;
 
@@ -372,13 +396,8 @@ export const deleteMessaege = async (
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      classID,
-      messageID,
-    }: {
-      classID: string | undefined;
-      messageID: string | undefined;
-    } = req.body;
+    const classID: string | undefined = req.params.classID;
+    const messageID: string | undefined = req.params.messageID;
 
     const userID = req.user;
 

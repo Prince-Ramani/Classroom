@@ -1,21 +1,32 @@
 import { useQuery } from "@tanstack/react-query";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Wrapper from "../Wrapper";
 import PeopleDisplayer from "./PeoplDisplayer";
+import { useAuthUser } from "@/Context/authUserContext";
 
 const People = memo(() => {
   const { classID } = useParams();
   const navigate = useNavigate();
-  if (!classID) navigate("/");
+  const [isHimselfAdmin, setHimselfAdmin] = useState(false);
+  const { authUser } = useAuthUser();
+
+  if (!classID || !authUser) {
+    navigate("/");
+    return;
+  }
 
   const { data: peoples } = useQuery({
-    queryKey: [classID],
+    queryKey: [classID, "people"],
     queryFn: async () => {
       const res = await fetch(`/api/class/getmembers/${classID}`);
       const data = await res.json();
       if ("error" in data) toast.error(data.error);
+
+      setHimselfAdmin(() =>
+        data.admins.some((a: any) => a._id === authUser._id)
+      );
 
       return data;
     },
@@ -41,8 +52,12 @@ const People = memo(() => {
                 ) => {
                   return (
                     <PeopleDisplayer
+                      classID={classID}
+                      isHimselfAdmin={isHimselfAdmin}
                       key={member._id}
                       member={member}
+                      isHimself={isHimselfAdmin}
+                      isAdmin={true}
                       className={`${
                         peoples.admins.length - 1 === index ? "" : "border-b-2"
                       }`}
@@ -76,7 +91,10 @@ const People = memo(() => {
                 ) => {
                   return (
                     <PeopleDisplayer
+                      isHimselfAdmin={isHimselfAdmin}
                       key={member._id}
+                      classID={classID}
+                      isHimself={member._id === authUser?._id}
                       member={member}
                       className={`${
                         peoples.members.length - 1 === index ? "" : "border-b-2"

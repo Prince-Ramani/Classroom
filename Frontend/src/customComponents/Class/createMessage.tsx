@@ -3,10 +3,18 @@ import { Button } from "@/components/ui/button";
 import VideoPlayer from "@/components/VideoPLayer";
 import CustomTooltip from "@/something/CustomTooltip";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileText, Image, Video, X } from "lucide-react";
+import { CalendarIcon, FileText, Image, Video, X } from "lucide-react";
 import { memo, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 
 const CreateMessage = memo(
   ({ profile, classID }: { profile: string; classID: string | undefined }) => {
@@ -16,6 +24,10 @@ const CreateMessage = memo(
     const [video, setVideo] = useState<File | null>(null);
     const [videoPreview, setVideoPreview] = useState<string>("");
     const [docs, setDocs] = useState<File[]>([]);
+    const [type, setType] = useState<"Assignment" | "Classwork" | "Normal">(
+      "Normal"
+    );
+    const [dueDate, setDueDate] = useState<Date>();
 
     const queryclient = useQueryClient();
 
@@ -26,6 +38,8 @@ const CreateMessage = memo(
       setVideoPreview("");
       setDocs([]);
       setContent("");
+      setDueDate(undefined);
+      setType("Normal");
     };
 
     const { mutate, isPending } = useMutation({
@@ -117,8 +131,8 @@ const CreateMessage = memo(
         toast.error("Content required for message!");
         return;
       }
-      if (content.length < 3 || content.length > 200) {
-        toast.error("Content should have character range betweeen 3 and 200!");
+      if (content.length < 3 || content.length > 1200) {
+        toast.error("Content should have character range betweeen 3 and 1200!");
         return;
       }
       if (images && images.length > 0) {
@@ -131,8 +145,11 @@ const CreateMessage = memo(
       if (docs.length > 0) {
         docs.forEach((f) => formData.append("attachedPdfs", f));
       }
-
+      if (dueDate && type === "Assignment")
+        formData.append("dueDate", dueDate.toString());
       formData.append("content", content);
+      formData.append("type", type);
+
       mutate(formData);
     };
 
@@ -147,7 +164,72 @@ const CreateMessage = memo(
             src={profile}
             className="size-10 xl:size-12 rounded-full self-start"
           />
-          <div className=" w-full flex flex-col gap-4 ">
+          <div className=" w-full flex flex-col gap-4">
+            <div className="flex items-center pl-3">
+              <div className="flex  gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div className="font-semibold text-sm md:text-base bg-blue-500 text-white  rounded-md   px-2 flex items-center justify-center p-1 cursor-pointer">
+                      {type}
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className=" relative h-fit w-48 sm:w-52 md:w-56 lg:w-64 left-20  bg-black/90 text-white p-0 border-none shadow-md  shadow-green-600/80  ring-1 ring-green-400/80  ">
+                    <div
+                      className=" h-full w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold tracking-wide border-b border-gray-500"
+                      onClick={() => setType("Normal")}
+                    >
+                      Normal
+                    </div>
+
+                    <div
+                      className=" h-full w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold tracking-wide border-b border-gray-500"
+                      onClick={() => setType("Assignment")}
+                    >
+                      Assignment
+                    </div>
+                    <div
+                      className=" h-full w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold tracking-wide"
+                      onClick={() => setType("Classwork")}
+                    >
+                      Classwork
+                    </div>
+                  </PopoverContent>
+                </Popover>
+
+                {type === "Assignment" ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          " justify-start text-left font-normal",
+                          !dueDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon />
+                        {dueDate ? (
+                          format(dueDate, "PPP")
+                        ) : (
+                          <span>Pick a Due date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={dueDate}
+                        onSelect={setDueDate}
+                        initialFocus
+                        disabled={type !== "Assignment"}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="flex bg-blue-600 gap-2 ml-2"></div>
+            </div>
             <TextareaAutosize
               placeholder="Share something with your class..."
               minRows={2}

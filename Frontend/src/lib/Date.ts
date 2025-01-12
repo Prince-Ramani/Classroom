@@ -8,7 +8,7 @@ export const FormateDate = (
   const now = new Date();
 
   if (isToday(parsedDate)) {
-    const time = format(parsedDate, "HH:mm a");
+    const time = format(parsedDate, "hh:mm a");
     return time;
   }
 

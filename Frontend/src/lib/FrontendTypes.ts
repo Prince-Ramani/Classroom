@@ -26,7 +26,9 @@ export interface shortMessageInetrface {
   content: string;
   createdAt: string;
   isPinned: boolean;
+  type: "Normal" | "Assignment" | "Classwork";
   classID: string;
+  dueDate: string;
 
   uploadedBy: {
     _id: string;
@@ -72,11 +74,11 @@ export interface FullMessageInterface {
   content: string;
   createdAt: string;
   isPinned: boolean;
-  classID: {
-    _id: string;
-    name: string;
-  };
+  dueDate: string;
+  type: "Normal" | "Assignment" | "Classwork";
+  classID: string;
   classname: string;
+  isAdmin: boolean;
 
   uploadedBy: {
     _id: string;

@@ -8,9 +8,11 @@ import Bar from "@/something/Bar";
 import Loading from "@/components/Loading";
 import { FormateDate } from "@/lib/Date";
 import VideoPlayer from "@/components/VideoPLayer";
-import { FileText } from "lucide-react";
+import { BookA, BookMarked, FileText } from "lucide-react";
 import AddComment from "./AddComment";
 import Comment from "./Comment";
+import { format } from "date-fns";
+import MessageOptions from "../Class/messageOptions";
 
 const FullMessage = memo(() => {
   const { classID, messageID } = useParams();
@@ -38,21 +40,107 @@ const FullMessage = memo(() => {
           <Bar title={data.classname} />
           <Wrapper className="pt-7">
             <div className=" w-full  flex flex-col gap-2 ">
-              <div className="flex gap-4 items-center border-b border-orange-800 pb-5">
-                <img
-                  src={data.uploadedBy.profilePicture}
-                  alt="Profil picture"
-                  className="size-12"
-                />
-                <div className="flex gap-0.5 flex-col">
-                  <div className="font-semibold tracking-wide md:text-lg xl:text-xl">
-                    {data.uploadedBy.username}
+              {data.type === "Normal" ? (
+                <div className="flex gap-4 items-center border-b border-orange-800 pb-5">
+                  <img
+                    src={data.uploadedBy.profilePicture}
+                    alt="Profil picture"
+                    className="size-12"
+                  />
+                  <div className="flex gap-0.5 flex-col">
+                    <div className="font-semibold tracking-wide md:text-lg xl:text-xl">
+                      {data.uploadedBy.username}
+                    </div>
+                    <div className="text-xs text-gray-600 sm:text-sm">
+                      {FormateDate(data.createdAt)}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-600 sm:text-sm">
-                    {FormateDate(data.createdAt)}
+                  {data.isAdmin ? (
+                    <div className="ml-auto cursor-pointer hover:bg-black/10 rounded-full">
+                      <MessageOptions
+                        classID={data.classID}
+                        messageID={data._id}
+                        isPinned={data.isPinned}
+                        oldContent={data.content}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+
+              {data.type === "Assignment" ? (
+                <div className="flex gap-4 items-center border-b border-orange-800 pb-5">
+                  <div className="bg-orange-500 text-white rounded-full border  p-0.5">
+                    <BookMarked className="size-12 shrink-0  p-2 " />
+                  </div>
+                  <div className="flex  gap-0.5 flex-col w-full ">
+                    <div className=" flex w-full items-center">
+                      <div className="flex gap-0.5 flex-col">
+                        <div className="font-semibold tracking-wide md:text-lg xl:text-xl">
+                          New Assignment :
+                        </div>
+                        <div className="text-xs text-gray-600 sm:text-sm">
+                          Posted : {FormateDate(data.createdAt)}
+                        </div>
+                      </div>
+                      {data.isAdmin ? (
+                        <div className="ml-auto cursor-pointer hover:bg-black/10 rounded-full">
+                          <MessageOptions
+                            classID={data.classID}
+                            isPinned={data.isPinned}
+                            messageID={data._id}
+                            oldContent={data.content}
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <div className="text-xs  sm:text-sm text-red-600 tracking-tight font-semibold ">
+                      Due Date :{" "}
+                      {data.dueDate.trim() !== ""
+                        ? format(data.dueDate, "dd, MMM yyyy")
+                        : "Not given"}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                ""
+              )}
+
+              {data.type === "Classwork" ? (
+                <div className="flex gap-4 items-center border-b border-orange-800 pb-5">
+                  <div className="bg-blue-500 text-white rounded-full p-0.5">
+                    <BookA className="size-12 shrink-0  p-2 " />
+                  </div>
+                  <div className="flex gap-0.5 flex-col">
+                    <div className="font-semibold tracking-wide md:text-lg xl:text-xl">
+                      Classwork :
+                    </div>
+                    <div className="text-xs tracking-tight text-gray-600 sm:text-sm">
+                      {FormateDate(data.createdAt)}
+                    </div>
+                  </div>
+                  {data.isAdmin ? (
+                    <div className="ml-auto cursor-pointer hover:bg-black/10 rounded-full">
+                      <MessageOptions
+                        classID={data.classID}
+                        messageID={data._id}
+                        oldContent={data.content}
+                        isPinned={data.isPinned}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
 
               <div className=" pb-4">
                 <div className="md:text-lg break-all">{data.content}</div>
@@ -71,7 +159,7 @@ const FullMessage = memo(() => {
                     className={`grid grid-cols-2 gap-0.5 xl:gap-3 items-center justify-center`}
                   >
                     {data.attachedImages.map((i, index) => (
-                      <a href={i} target="_blank" className="  ">
+                      <a href={i} target="_blank" className="">
                         <img
                           src={i}
                           key={index}

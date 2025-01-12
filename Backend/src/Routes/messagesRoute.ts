@@ -20,8 +20,12 @@ router.post(
   ]),
   sendMessage
 );
-router.patch("/editmessage", protectRoute, editMessage);
-router.patch("/pinmessage", protectRoute, pinMessage);
-router.delete("/deletemessage", protectRoute, deleteMessaege);
+router.patch("/editmessage/:classID/:messageID", protectRoute, editMessage);
+router.patch("/pinmessage/:classID/:messageID", protectRoute, pinMessage);
+router.delete(
+  "/deletemessage/:classID/:messageID",
+  protectRoute,
+  deleteMessaege
+);
 
 export default router;
