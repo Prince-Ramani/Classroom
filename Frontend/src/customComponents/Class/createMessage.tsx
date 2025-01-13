@@ -162,7 +162,7 @@ const CreateMessage = memo(
         >
           <img
             src={profile}
-            className="size-10 xl:size-12 rounded-full self-start"
+            className="size-10 xl:size-12 rounded-full self-start object-cover"
           />
           <div className=" w-full flex flex-col gap-4">
             <div className="flex items-center pl-3">

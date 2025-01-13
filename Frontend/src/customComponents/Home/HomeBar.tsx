@@ -1,4 +1,3 @@
-import { useAuthUser } from "@/Context/authUserContext";
 import AddButton from "@/something/AddButton";
 
 import { Menu } from "lucide-react";
@@ -12,9 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import Profile from "./Profile";
 
 const HomeBar = memo(() => {
-  const { authUser } = useAuthUser();
   const [isOpen, setIsOpen] = useState(false);
   const [joinId, setJoinId] = useState("");
 
@@ -86,7 +85,7 @@ const HomeBar = memo(() => {
 
                       <button
                         className={`bg-transparent  ring-1 text-white ring-white/50 font-semibold rounded-full p-2 text-sm ${
-                          1 ? "opacity-75" : "hover:bg-white/10"
+                          isPending ? "opacity-75" : "hover:bg-white/10"
                         } 
                   `}
                         disabled={isPending}
@@ -116,10 +115,7 @@ const HomeBar = memo(() => {
         <div>
           <div className="flex gap-10 items-center">
             <AddButton setIsOpen={setIsOpen} />
-            <img
-              src={authUser?.profilePicture}
-              className="size-10 rounded-full shrink-0 object-cover hover:border border-black active:border"
-            />
+            <Profile />
           </div>
         </div>
       </div>

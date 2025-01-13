@@ -31,7 +31,7 @@ const PeopleDisplayer = memo(
       >
         <img
           src={member.profilePicture}
-          className="size-8 lg:size-10 rounded-full"
+          className="size-9 lg:size-10 rounded-full object-cover"
         />
         <div className="font-semibold  text-base sm:text-lg ">
           {member.username}

@@ -30,7 +30,6 @@ const Settings = memo(() => {
       const res = await fetch(`/api/class/getclass/settings/${classID}`);
       const data = await res.json();
       if ("error" in data) toast.error(data.error);
-      console.log(data);
       return data;
     },
     enabled: !!classID,

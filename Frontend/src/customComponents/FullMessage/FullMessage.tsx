@@ -45,7 +45,7 @@ const FullMessage = memo(() => {
                   <img
                     src={data.uploadedBy.profilePicture}
                     alt="Profil picture"
-                    className="size-12"
+                    className="size-12 rounded-full  shrink-0 object-cover"
                   />
                   <div className="flex gap-0.5 flex-col">
                     <div className="font-semibold tracking-wide md:text-lg xl:text-xl">

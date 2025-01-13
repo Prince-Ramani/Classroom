@@ -455,6 +455,46 @@ export const getMessages = async (
   }
 };
 
+export const getClasswork = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const classID: string | undefined = req.params.classID;
+
+    if (!classID || classID.trim() === "" || typeof classID !== "string") {
+      res.status(400).json({ error: "Class id required!" });
+      return;
+    }
+
+    const classMessages = await Messages.find({
+      $and: [{ classID: classID }, { type: { $ne: "Normal" } }],
+    })
+      .sort({ isPinned: -1, createdAt: -1 })
+      .populate({
+        path: "uploadedBy",
+        select: "_id profilePicture username",
+      })
+      .lean();
+
+    const classM = await Promise.all(
+      classMessages.map(async (ms) => {
+        const commentLength = await Comments.countDocuments({
+          messageID: ms._id,
+          classID: ms.classID,
+        });
+
+        return { ...ms, commentLength };
+      })
+    );
+
+    res.status(200).json(classM);
+  } catch (err) {
+    res.status(500).json({ error: "Internal sever error!" });
+    console.log("Error in getMessages controller : ", err);
+  }
+};
+
 export const getMembers = async (
   req: Request,
   res: Response

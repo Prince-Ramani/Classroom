@@ -18,6 +18,7 @@ import { MoreVertical } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useAuthUser } from "@/Context/authUserContext";
+import { useNavigate } from "react-router-dom";
 
 const MessageOptions = memo(
   ({
@@ -41,6 +42,7 @@ const MessageOptions = memo(
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
     let isPopoverDisabled = false;
+    const navigate = useNavigate();
 
     const { authUser } = useAuthUser();
 
@@ -53,16 +55,15 @@ const MessageOptions = memo(
           }
         );
         const data = await res.json();
+        console.log(data);
         return data;
       },
       onSuccess: (data) => {
         if ("error" in data) return toast.error(data.error);
         toast.success(data.message);
+        navigate(`/class/${classID}`);
         queryclient.invalidateQueries({
           queryKey: ["messages", classID],
-        });
-        queryclient.invalidateQueries({
-          queryKey: [classID, messageID],
         });
         setIsOpen(false);
         setIsPopoverOpen(false);

@@ -4,7 +4,6 @@ import ClassHeader from "./ClassHeader";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-import Bar from "@/something/Bar";
 import { useAuthUser } from "@/Context/authUserContext";
 
 const ClassLayout = memo(() => {
@@ -34,8 +33,7 @@ const ClassLayout = memo(() => {
         classID={data?._id}
         isAdmin={data?.admins.includes(authUser?._id)}
       />
-      <Bar title={data?.name} className="h-12 md:hidden sm:h-14" />
-      <main className="min-h-full w-full flex-col flex flex-grow sm:p-1 sm:px-2 md:p-2 ">
+      <main className="min-h-full w-full pb-16 md:pb-2 flex-col flex flex-grow sm:p-1 sm:px-2 md:p-2 ">
         {data ? <Outlet context={data} /> : ""}
       </main>
     </div>

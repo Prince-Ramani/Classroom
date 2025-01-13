@@ -16,7 +16,6 @@ const MessageDisplayer = memo(
   }) => {
     const navigate = useNavigate();
     const handleClick = (e: any) => {
-      console.log(e.target.tagName);
       if (
         e.target.tagName === "morevertical" ||
         e.target.tagName === "SPAN" ||
@@ -102,7 +101,7 @@ const MessageDisplayer = memo(
           <div className="items-center w-full  flex gap-2 md:gap-3 lg:gap-4 xl:gap-5 ">
             <img
               src={message.uploadedBy.profilePicture}
-              className="size-10 rounded-full"
+              className="size-10 rounded-full object-cover"
             />
             <div className="flex flex-col ">
               <div className="text-lg font-medium">

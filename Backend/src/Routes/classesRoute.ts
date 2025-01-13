@@ -7,6 +7,7 @@ import {
   getClass,
   getClasses,
   getClassSettings,
+  getClasswork,
   getComments,
   getFullMessage,
   getMembers,
@@ -29,6 +30,7 @@ router.get("/getclass/settings/:classID", protectRoute, getClassSettings);
 
 router.get("/getclass/:classID", protectRoute, getClass);
 router.get("/getmessages/:classID", protectRoute, getMessages);
+router.get("/getclasswork/:classID", protectRoute, getClasswork);
 router.get("/getMessage/:classID/:messageID", protectRoute, getFullMessage);
 router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removemember/:classID/:personID", protectRoute, removeMember);
