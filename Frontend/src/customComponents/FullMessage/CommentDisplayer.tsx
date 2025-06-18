@@ -93,7 +93,7 @@ const CommentDisplayer = memo(
                 >
                   <img
                     src={reply.replierId.profilePicture}
-                    className="size-8"
+                    className="size-8 rounded-full"
                     alt="Replier profile picture"
                   />
                   <div className="flex flex-col w-full">
@@ -127,7 +127,7 @@ const CommentDisplayer = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default CommentDisplayer;

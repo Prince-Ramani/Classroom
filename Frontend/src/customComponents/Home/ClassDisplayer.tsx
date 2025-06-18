@@ -26,10 +26,7 @@ const ClassDisplayer = memo(
       >
         <div className="h-32 rounded-sm relative ">
           <img
-            src={
-              "https://res.cloudinary.com/dwxzguawt/image/upload/v1736314821/891619-cool-wallpaper-of-study-1920x1080_qvhpn6.jpg" ||
-              classDetails.banner
-            }
+            src={classDetails.banner}
             alt="Class banner"
             className="h-full object-cover w-full rounded-sm rounded-b-none"
           />
@@ -58,7 +55,7 @@ const ClassDisplayer = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default ClassDisplayer;
