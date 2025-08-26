@@ -18,18 +18,18 @@ const Bar = ({
     <div
       className={cn(
         " flex  border-b p-2 sm:p-3 md:p-4 md:pl-10 gap-4 items-cente  text-gray-700 shadow-md  shadow-black/30",
-        className
+        className,
       )}
     >
       {backButton ? (
-        <div
+        <button
           className="hover:bg-gray-500/20 rounded-full p-1 cursor-pointer"
           onClick={() => navigate(-1)}
         >
           <CustomTooltip title="Back">
             <ArrowLeft className="shrink-0 " />
           </CustomTooltip>
-        </div>
+        </button>
       ) : (
         ""
       )}

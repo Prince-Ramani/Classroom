@@ -41,7 +41,7 @@ const MessageOptions = memo(
     const [pinned, setIsPinned] = useState(isPinned);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-    let isPopoverDisabled = false;
+    const isPopoverDisabled = false;
     const navigate = useNavigate();
 
     const { authUser } = useAuthUser();
@@ -52,7 +52,7 @@ const MessageOptions = memo(
           `/api/message/deletemessage/${classID}/${messageID}`,
           {
             method: "DELETE",
-          }
+          },
         );
         const data = await res.json();
         console.log(data);
@@ -82,7 +82,7 @@ const MessageOptions = memo(
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ content }),
-          }
+          },
         );
         const data = await res.json();
         return data;
@@ -104,7 +104,7 @@ const MessageOptions = memo(
           `/api/message/pinmessage/${classID}/${messageID}`,
           {
             method: "PATCH",
-          }
+          },
         );
         const data = await res.json();
         return data;
@@ -268,14 +268,14 @@ const MessageOptions = memo(
           >
             {" "}
             <PopoverTrigger asChild>
-              <div className="rounded-full   p-1 h-fit w-fit  hover:bg-white/20 ">
+              <button className="rounded-full   p-1 h-fit w-fit  hover:bg-white/20 ">
                 <MoreVertical
                   className={cn(
                     `  top-0 right-2 size-5 shrink-0 rounded-full   `,
-                    className
+                    className,
                   )}
                 />
-              </div>
+              </button>
             </PopoverTrigger>
             <PopoverContent
               side="bottom"
@@ -307,7 +307,7 @@ const MessageOptions = memo(
         </span>
       </>
     );
-  }
+  },
 );
 
 export default MessageOptions;

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import Wrapper from "./Wrapper";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -11,10 +11,6 @@ const Classwork = memo(() => {
   const context: ClassInterface = useOutletContext();
   const navigate = useNavigate();
 
-  if (!context._id) {
-    navigate("/");
-    return;
-  }
   const { authUser } = useAuthUser();
   const { data: messages } = useQuery({
     queryKey: ["classwork", context._id],
@@ -26,6 +22,13 @@ const Classwork = memo(() => {
     },
     enabled: !!context._id,
   });
+
+  useEffect(() => {
+    if (!context._id) {
+      navigate("/");
+    }
+  }, [navigate, context._id]);
+
   return (
     <Wrapper>
       <div className="flex flex-col gap-2  h-full w-full   ">

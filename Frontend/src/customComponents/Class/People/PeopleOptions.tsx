@@ -53,7 +53,7 @@ const PeopleOptions = memo(
           `/api/class/removemember/${classID}/${personID}`,
           {
             method: "PATCH",
-          }
+          },
         );
         const data = await res.json();
         return data;
@@ -77,14 +77,14 @@ const PeopleOptions = memo(
         >
           {" "}
           <PopoverTrigger asChild>
-            <div className="rounded-full   p-1 h-fit w-fit  hover:bg-white/20 ">
+            <button className="rounded-full   p-1 h-fit w-fit  hover:bg-white/20 ">
               <MoreVertical
                 className={cn(
                   `  top-0 right-2 size-5 shrink-0 rounded-full   `,
-                  className
+                  className,
                 )}
               />
-            </div>
+            </button>
           </PopoverTrigger>
           <PopoverContent
             side="bottom"
@@ -108,7 +108,7 @@ const PeopleOptions = memo(
         </Popover>
       </div>
     );
-  }
+  },
 );
 
 export default PeopleOptions;

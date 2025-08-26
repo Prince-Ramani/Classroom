@@ -83,6 +83,12 @@ const FullMessage = memo(() => {
                         <div className="font-semibold tracking-wide md:text-lg xl:text-xl">
                           New Assignment :
                         </div>
+                        <div className="text-xs tracking-tight text-gray-600 sm:text-sm ">
+                          Uploaded by :{" "}
+                          <span className="font-semibold">
+                            {data.uploadedBy.username}
+                          </span>
+                        </div>
                         <div className="text-xs text-gray-600 sm:text-sm">
                           Posted : {FormateDate(data.createdAt)}
                         </div>
@@ -120,6 +126,12 @@ const FullMessage = memo(() => {
                   <div className="flex gap-0.5 flex-col">
                     <div className="font-semibold tracking-wide md:text-lg xl:text-xl">
                       Classwork :
+                    </div>
+                    <div className="text-xs tracking-tight text-gray-600 sm:text-sm ">
+                      Uploaded by :{" "}
+                      <span className="font-semibold">
+                        {data.uploadedBy.username}
+                      </span>
                     </div>
                     <div className="text-xs tracking-tight text-gray-600 sm:text-sm">
                       {FormateDate(data.createdAt)}

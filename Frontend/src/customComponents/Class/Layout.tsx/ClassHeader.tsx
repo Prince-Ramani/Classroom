@@ -50,7 +50,7 @@ const ClassHeader = memo(
         <div
           className={` flex md:hidden   border-b p-2 backdrop-blur-lg sticky  top-0 z-50 bg-white/70 sm:p-3 md:p-4 md:pl-10 gap-4 items-cente  text-gray-700 shadow-md  shadow-black/30`}
         >
-          <div
+          <button
             className="hover:bg-gray-500/20 rounded-full p-1 cursor-pointer"
             onClick={() => {
               if (currentlyOn === "settings") {
@@ -63,13 +63,13 @@ const ClassHeader = memo(
             <CustomTooltip title="Back">
               <ArrowLeft className="shrink-0 " />
             </CustomTooltip>
-          </div>
+          </button>
 
           <div className="font-semibold text-2xl">{classname}</div>
 
           <div className="flex items-center ml-auto  ">
             {isAdmin ? (
-              <div
+              <button
                 className={`group  hover:bg-black/10 rounded-full cursor-pointer items-center flex transition-colors ${
                   currentlyOn === "settings" ? "bg-blue-500 text-white " : ""
                 }  p-1`}
@@ -78,7 +78,7 @@ const ClassHeader = memo(
                 <CustomTooltip title="Settings">
                   <Settings className="size-6 group-hover:text-blue-500" />
                 </CustomTooltip>
-              </div>
+              </button>
             ) : (
               ""
             )}
@@ -87,19 +87,19 @@ const ClassHeader = memo(
 
         <div className="hidden md:flex  backdrop-blur-lg shadow-lg shadow-gray-500/30  z-20 sticky text-gray-700  top-0 w-full  items-center justify-between  lg:px-10">
           <div className="flex items-center gap-5 p-4 px-3">
-            <div
+            <button
               className="hover:bg-gray-500/20 rounded-full p-1 cursor-pointer"
               onClick={() => navigate(`/`)}
             >
               <CustomTooltip title="Back">
                 <ArrowLeft className="shrink-0 " />
               </CustomTooltip>
-            </div>
+            </button>
             <div className="font-semibold text-xl ">{classname}</div>
           </div>
 
           <div className="flex self-end cursor-pointer   ">
-            <div
+            <button
               className={`flex flex-col gap-2 w-32  text-center  `}
               onClick={() => navigate(`/class/${classID}`)}
             >
@@ -120,9 +120,9 @@ const ClassHeader = memo(
                     : "border-transparent"
                 }`}
               />
-            </div>
+            </button>
 
-            <div
+            <button
               className={`flex flex-col gap-2 w-32  text-center`}
               onClick={() => navigate("classwork")}
             >
@@ -143,8 +143,9 @@ const ClassHeader = memo(
                     : "border-transparent"
                 }`}
               />
-            </div>
-            <div
+            </button>
+
+            <button
               className={`flex flex-col gap-2 w-32  text-center`}
               onClick={() => navigate("people")}
             >
@@ -157,20 +158,19 @@ const ClassHeader = memo(
               >
                 People
               </div>
-
               <div
                 className={`w-full rounded-t-full ${
                   currentlyOn === "people"
                     ? "border-blue-600 border-2"
                     : "border-transparent"
                 }`}
-              />
-            </div>
+              ></div>
+            </button>
           </div>
 
           <div className="flex items-center  gap-x-10">
             {isAdmin ? (
-              <div
+              <button
                 className={`group  hover:bg-black/10 rounded-full cursor-pointer items-center flex transition-colors ${
                   currentlyOn === "settings" ? "bg-blue-500 text-white " : ""
                 }  p-1`}
@@ -179,7 +179,7 @@ const ClassHeader = memo(
                 <CustomTooltip title="Settings">
                   <Settings className="size-6 group-hover:text-blue-500" />
                 </CustomTooltip>
-              </div>
+              </button>
             ) : (
               ""
             )}
@@ -189,7 +189,7 @@ const ClassHeader = memo(
 
         <div className="border-t border-gray-400/50 p-1 md:hidden  fixed bottom-0 w-full bg-white z-[100] ">
           <div className={` flex justify-around items-center `}>
-            <div
+            <button
               className=" hover:bg-white/20 rounded-full cursor-pointer "
               onClick={() => navigate(`/class/${classID}`)}
             >
@@ -211,9 +211,9 @@ const ClassHeader = memo(
                   </div>
                 </div>
               </CustomTooltip>
-            </div>
+            </button>
 
-            <div
+            <button
               className=" hover:bg-white/20 rounded-full p-1 cursor-pointer "
               onClick={() => navigate("classwork")}
             >
@@ -233,9 +233,9 @@ const ClassHeader = memo(
                   Classwork
                 </div>
               </div>
-            </div>
+            </button>
 
-            <div
+            <button
               className=" hover:bg-white/20 rounded-full p-1 cursor-pointer "
               onClick={() => navigate("people")}
             >
@@ -257,11 +257,11 @@ const ClassHeader = memo(
                   </div>
                 </div>
               </CustomTooltip>
-            </div>
+            </button>
           </div>
         </div>
       </>
     );
-  }
+  },
 );
 export default ClassHeader;

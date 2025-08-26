@@ -32,14 +32,14 @@ const ClassDisplayerOptions = memo(
       <span>
         <Popover>
           <PopoverTrigger asChild>
-            <div className="rounded-full p-1 h-fit w-fit  hover:bg-white/20 ">
+            <button className="rounded-full p-1 h-fit w-fit  hover:bg-white/20 ">
               <MoreVertical
                 className={cn(
                   ` text-white top-0 right-2 size-5 shrink-0 rounded-full   `,
-                  className
+                  className,
                 )}
               />
-            </div>
+            </button>
           </PopoverTrigger>
           <PopoverContent
             side="bottom"
@@ -55,7 +55,7 @@ const ClassDisplayerOptions = memo(
         </Popover>
       </span>
     );
-  }
+  },
 );
 
 export default ClassDisplayerOptions;

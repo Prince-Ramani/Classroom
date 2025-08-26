@@ -22,7 +22,12 @@ const ClassDisplayer = memo(
     return (
       <div
         className="border-2  rounded-md  h-fit w-full cursor-pointer hover:border-green-600 transition-all duration-200 "
+        role="button"
+        tabIndex={0}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleClick(e);
+        }}
       >
         <div className="h-32 rounded-sm relative ">
           <img

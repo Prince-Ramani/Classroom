@@ -25,7 +25,6 @@ export const createClass = async (
 
     const user = await User.findOne({ _id: userID });
     const b = getBanner();
-    console.log(b);
     if (!user) {
       res.status(404).json({ error: "Unauthorized!" });
       return;
@@ -60,7 +59,7 @@ export const createClass = async (
       return;
     }
 
-    if (description) {
+    if (!!description) {
       const newClass = new Classes({
         name,
         description,
@@ -75,6 +74,7 @@ export const createClass = async (
       res.status(200).json({ message: "Class created successfully!" });
       return;
     }
+
     const newClass = new Classes({
       name,
       teacherName,
@@ -83,10 +83,14 @@ export const createClass = async (
     });
 
     await newClass.save();
+    user.classesJoined.push(newClass._id as mongoose.Types.ObjectId);
+    await user.save();
     res.status(200).json({ message: "Class created successfully!" });
+    return;
   } catch (err) {
     console.error("Error in createClass controller : ", err);
     res.status(500).json({ error: "Internal server error!" });
+    return;
   }
 };
 
@@ -212,7 +216,7 @@ export const leaveClass = async (
 
     res.status(200).json({ message: "Leaved class successfully!" });
   } catch (err) {
-    console.error("Error in newAdmin controller : ", err);
+    console.error("Error in leaveClass controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
   }
 };
@@ -675,8 +679,12 @@ export const newAdmin = async (req: Request, res: Response): Promise<void> => {
       classToUpdate.admins = classToUpdate.admins.filter(
         (admin) => admin.toString() !== personID.toString(),
       );
+      classToUpdate.members.push(new mongoose.Types.ObjectId(personID));
     } else {
       classToUpdate.admins.push(new mongoose.Types.ObjectId(personID));
+      classToUpdate.members = classToUpdate.members.filter(
+        (f) => f.toString() !== personID.toString(),
+      );
     }
 
     await classToUpdate.save();

@@ -14,7 +14,7 @@ const Profile = memo(() => {
   const { authUser } = useAuthUser();
   const queryclient = useQueryClient();
   const [profilePicture, setProfilePicture] = useState<File | undefined>(
-    undefined
+    undefined,
   );
   const [profilePreview, setProfilePreview] = useState<string>("");
 
@@ -89,10 +89,12 @@ const Profile = memo(() => {
     <div className="cursor-pointer">
       <Popover>
         <PopoverTrigger asChild>
-          <img
-            src={authUser?.profilePicture}
-            className="size-10 rounded-full shrink-0 object-cover hover:border border-black active:border"
-          />
+          <button>
+            <img
+              src={authUser?.profilePicture}
+              className="size-10 rounded-full shrink-0 object-cover hover:border border-black active:border"
+            />
+          </button>
         </PopoverTrigger>
         <PopoverContent className=" relative h-fit w-48 sm:w-52 md:w-56 lg:w-64 right-10 lg:right-12 bg-white text-white p-0 border-none shadow-md  shadow-green-600/80  ring-1 ring-green-400/80  ">
           <div className=" h-full text-black w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold ">

@@ -30,8 +30,13 @@ const MessageDisplayer = memo(
     };
     return (
       <div
+        tabIndex={0}
+        role="button"
         className="border rounded-lg  p-2 lg:p-3 cursor-pointer hover:bg-black/5 transition-colors active:bg-blue-200"
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleClick(e);
+        }}
       >
         {message.isPinned ? (
           <div className="flex gap-1  items-center text-gray-500 p-1 md:p-2">
@@ -48,6 +53,12 @@ const MessageDisplayer = memo(
             </div>
             <div className="flex flex-col ">
               <div className="text-lg font-medium">Classwork:</div>
+              <div className="text-xs tracking-tight text-gray-600 sm:text-sm ">
+                Uploaded by :{" "}
+                <span className="font-semibold">
+                  {message.uploadedBy.username}
+                </span>
+              </div>
               <div className="text-gray-500 text-xs tracking-tight">
                 Posted {FormateDate(message.createdAt)}
               </div>
@@ -75,7 +86,13 @@ const MessageDisplayer = memo(
               <BookMarked className=" size-10 p-1.5   text-white " />
             </div>
             <div className="flex flex-col ">
-              <div className="text-lg font-medium">New assignment:</div>
+              <div className="text-lg font-medium">New Assignment:</div>
+              <div className="text-xs tracking-tight text-gray-600 sm:text-sm ">
+                Uploaded by :{" "}
+                <span className="font-semibold">
+                  {message.uploadedBy.username}
+                </span>
+              </div>
               <div className="text-gray-500 text-xs tracking-tight">
                 Posted {FormateDate(message.createdAt)}
               </div>
@@ -129,7 +146,7 @@ const MessageDisplayer = memo(
         )}
 
         <div className=" p-2 break-words text-sm sm:text-base  ">
-          {message.content}kcndkvlndlkvndnvlkdnlkvndlknvldkn
+          {message.content}
         </div>
         {message.attachedVideo ? (
           <div>
@@ -148,10 +165,10 @@ const MessageDisplayer = memo(
                     message.attachedImages.length == 1
                       ? "h-full w-full max-h-[400px]"
                       : message.attachedImages.length === 2
-                      ? "size-36 sm:size-48 md:size-52 lg:size-64"
-                      : message.attachedImages.length > 1
-                      ? "size-36 sm:size-48 md:size-52 lg:size-64"
-                      : ""
+                        ? "size-36 sm:size-48 md:size-52 lg:size-64"
+                        : message.attachedImages.length > 1
+                          ? "size-36 sm:size-48 md:size-52 lg:size-64"
+                          : ""
                   } object-cover rounded-sm`}
                 />
               </div>
@@ -183,7 +200,7 @@ const MessageDisplayer = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default MessageDisplayer;

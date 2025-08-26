@@ -25,7 +25,7 @@ const CreateMessage = memo(
     const [videoPreview, setVideoPreview] = useState<string>("");
     const [docs, setDocs] = useState<File[]>([]);
     const [type, setType] = useState<"Assignment" | "Classwork" | "Normal">(
-      "Normal"
+      "Normal",
     );
     const [dueDate, setDueDate] = useState<Date>();
 
@@ -169,30 +169,30 @@ const CreateMessage = memo(
               <div className="flex  gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <div className="font-semibold text-sm md:text-base bg-blue-500 text-white  rounded-md   px-2 flex items-center justify-center p-1 cursor-pointer">
+                    <button className="font-semibold text-sm md:text-base bg-blue-500 text-white  rounded-md   px-2 flex items-center justify-center p-1 cursor-pointer">
                       {type}
-                    </div>
+                    </button>
                   </PopoverTrigger>
                   <PopoverContent className=" relative h-fit w-48 sm:w-52 md:w-56 lg:w-64 left-20  bg-black/90 text-white p-0 border-none shadow-md  shadow-green-600/80  ring-1 ring-green-400/80  ">
-                    <div
+                    <button
                       className=" h-full w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold tracking-wide border-b border-gray-500"
                       onClick={() => setType("Normal")}
                     >
                       Normal
-                    </div>
+                    </button>
 
-                    <div
+                    <button
                       className=" h-full w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold tracking-wide border-b border-gray-500"
                       onClick={() => setType("Assignment")}
                     >
                       Assignment
-                    </div>
-                    <div
+                    </button>
+                    <button
                       className=" h-full w-full p-2 py-3 hover:bg-white/10 active:bg-green-600/40 transition-colors cursor-pointer select-none font-semibold tracking-wide"
                       onClick={() => setType("Classwork")}
                     >
                       Classwork
-                    </div>
+                    </button>
                   </PopoverContent>
                 </Popover>
 
@@ -203,7 +203,7 @@ const CreateMessage = memo(
                         variant={"outline"}
                         className={cn(
                           " justify-start text-left font-normal",
-                          !dueDate && "text-muted-foreground"
+                          !dueDate && "text-muted-foreground",
                         )}
                       >
                         <CalendarIcon />
@@ -296,7 +296,7 @@ const CreateMessage = memo(
               </div>
               <Button
                 size="lg"
-                className="ml-auto bg-blue-500  hover:bg-blue-300 active:bg-green-400"
+                className="ml-auto bg-blue-500 w-10 sm:w-24 hover:bg-blue-300 active:bg-green-400"
                 disabled={isPending}
                 onClick={() => handleClick()}
               >
@@ -324,14 +324,15 @@ const CreateMessage = memo(
                       key={index}
                       className="size-32 items-center md:items-start  md:size-36 lg:size-48 select-none  object-cover rounded-md  "
                     />
-                    <div
+                    <button
                       className=" flex justify-center items-center w-full  hover:bg-white/20 rounded-full  p-1 cursor-pointer "
                       onClick={() => handleRemoveImage(index)}
+                      disabled={isPending}
                     >
                       <CustomTooltip title="Remove">
                         <X className="shrink-0 text-red-700 active:text-green-600 " />
                       </CustomTooltip>
-                    </div>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -343,17 +344,18 @@ const CreateMessage = memo(
                 <div className="w-full h-fit">
                   <VideoPlayer source={videoPreview} />
                 </div>
-                <div className=" h-fit w-fit rounded-full  p-1 hover:bg-white/10">
+                <button
+                  className=" h-fit w-fit rounded-full  p-1 hover:bg-white/10"
+                  disabled={isPending}
+                  onClick={() => {
+                    setVideo(null);
+                    setVideoPreview("");
+                  }}
+                >
                   <CustomTooltip title="Remove">
-                    <X
-                      className="   rounded-full  transition-colors cursor-pointer flex justify-center items-center w-full "
-                      onClick={() => {
-                        setVideo(null);
-                        setVideoPreview("");
-                      }}
-                    />
+                    <X className="   rounded-full  transition-colors cursor-pointer flex justify-center items-center w-full " />
                   </CustomTooltip>
-                </div>
+                </button>
               </div>
             ) : (
               ""
@@ -369,14 +371,14 @@ const CreateMessage = memo(
                     key={index}
                   >
                     <p className="min-w-fit text-sm">{doc.name}</p>
-                    <div
+                    <button
                       className=" flex justify-center items-center mx-2 hover:bg-black/20 rounded-full  p-1 cursor-pointer "
                       onClick={() => handleRemoveDoc(index)}
                     >
                       <CustomTooltip title="Remove">
                         <X className="shrink-0 size-6 lg:size-fit text-red-700 active:text-green-600 " />
                       </CustomTooltip>
-                    </div>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -387,7 +389,7 @@ const CreateMessage = memo(
         </div>
       </>
     );
-  }
+  },
 );
 
 export default CreateMessage;
