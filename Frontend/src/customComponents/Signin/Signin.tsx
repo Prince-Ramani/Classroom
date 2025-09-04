@@ -5,6 +5,7 @@ import { Lock, Mail, OctagonAlert } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import studyImage from "../../assets/boy-studying-on-table.png";
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -61,11 +62,22 @@ const Signin = () => {
 
   return (
     <div className="min-h-screen w-full    border flex justify-center items-center  ">
-      <div className="flex flex-col  p-2 gap-2 lg:gap-7 w-full max-w-xs md:max-w-sm lg:max-w-lg ">
-        <div>
-          <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+      <div
+        className="flex flex-col   gap-1 lg:gap-5 w-full max-w-[90%] p-5 sm:p-7 lg:p-10 md:max-w-sm lg:max-w-lg bg-white  rounded-lg  shadow-black shadow-sm
+      "
+      >
+        <img
+          src={studyImage}
+          className="max-h-48 object-cover rounded-sm"
+          alt="boy-studying"
+        />
+        <div className="flex items-start  flex-col sm:gap-2">
+          <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-blue-600">
             {" "}
-            Signin
+            Welcom back!
+          </h1>
+          <h1 className="font-semibold  lg:text-xl text-gray-700">
+            Sign in to continue learning.
           </h1>
         </div>
         <div className="flex gap-3 flex-col">
@@ -106,7 +118,7 @@ const Signin = () => {
             ) : (
               ""
             )}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 mt-2">
               <Button
                 className="w-full"
                 disabled={isPending}
@@ -114,15 +126,15 @@ const Signin = () => {
               >
                 Sign up
               </Button>
-              <p
-                className="cursor-pointer group hover:text-blue-400 w-fit text-sm sm:text-base "
+              <button
+                className="cursor-pointer group hover:text-blue-400 w-fit text-sm sm:text-base mt-3 "
                 onClick={() => navigate("/signup")}
               >
                 Don't have an account?{" "}
                 <span className="text-primary underline group-hover:text-blue-400">
                   Sign up
                 </span>
-              </p>
+              </button>
             </div>
           </div>
         </div>

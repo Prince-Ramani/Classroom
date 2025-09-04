@@ -5,7 +5,7 @@ import { Lock, Mail, OctagonAlert, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import stuImage from "../../assets/boy-studying-on-laptop.png";
 const Signup = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState({
@@ -80,11 +80,24 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen w-full    border flex justify-center items-center   ">
-      <div className="flex flex-col  p-2 gap-2 lg:gap-7 w-full max-w-xs md:max-w-sm lg:max-w-lg ">
+      <div
+        className="flex flex-col   gap-1 lg:gap-5 w-full max-w-[90%] p-5 sm:p-7 lg:p-10 md:max-w-sm lg:max-w-lg bg-white  rounded-lg  shadow-black shadow-sm
+      "
+      >
+        <img
+          src={stuImage}
+          className="max-h-48 object-cover rounded-sm"
+          alt="boy-studying"
+        />
         <div>
-          <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+          <h1 className="font-bold text-xl md:text-xl lg:text-3xl text-blue-600">
             {" "}
-            Signup
+            Welcome to Classroom!
+          </h1>
+
+          <h1 className="font-semibold  lg:text-xl text-gray-700">
+            {" "}
+            Signup to continue.
           </h1>
         </div>
         <div className="flex gap-3 flex-col">
@@ -149,7 +162,7 @@ const Signup = () => {
             ) : (
               ""
             )}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 mt-2">
               <Button
                 className="w-full"
                 disabled={isPending}
@@ -157,15 +170,15 @@ const Signup = () => {
               >
                 Sign up
               </Button>
-              <p
-                className="cursor-pointer group hover:text-blue-400 w-fit text-sm sm:text-base "
+              <button
+                className="cursor-pointer group hover:text-blue-400 w-fit text-sm sm:text-base  mt-2"
                 onClick={() => navigate("/signin")}
               >
                 Already have an account?{" "}
                 <span className="text-primary underline group-hover:text-blue-400">
                   Sign in
                 </span>
-              </p>
+              </button>
             </div>
           </div>
         </div>
