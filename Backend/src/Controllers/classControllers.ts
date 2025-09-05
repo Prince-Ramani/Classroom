@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import User from "../models/UserModel";
 import Classes from "../models/ClassModel";
 import { createClassInterface } from "../types";
-import mongoose, { mongo } from "mongoose";
+import mongoose, { isValidObjectId, mongo } from "mongoose";
 import Messages from "../models/MessagesModel";
 import { Comments } from "../models/commentModel";
+import { warn } from "console";
 
 const getBanner = (): String => {
   const rawBanners: String | undefined = process.env.defaultClassBanners;
@@ -206,9 +207,11 @@ export const leaveClass = async (
     }
 
     me.classesJoined = me.classesJoined.filter(
-      (join) =>
-        join.toString() !==
-        (classToLeave._id as mongoose.Types.ObjectId).toString(),
+      (join) => join.toString() !== classID,
+    );
+
+    me.pinnedClasses = me.pinnedClasses.filter(
+      (pin) => pin.toString() !== classID,
     );
 
     await classToLeave.save();
@@ -358,10 +361,28 @@ export const getClasses = async (
       admins: cl.admins.length,
     }));
 
-    res.status(200).json(filteredClasses);
+    let pinnedClasses: {}[] = [];
+    let classes: {}[] = [];
+
+    filteredClasses.forEach((cl) => {
+      const isPinned = user.pinnedClasses.some(
+        (id) => id.toString() === cl._id.toString(),
+      );
+
+      if (isPinned) {
+        pinnedClasses.push(cl);
+      } else {
+        classes.push(cl);
+      }
+    });
+
+    res.status(200).json({ pinnedClasses, classes });
+
+    return;
   } catch (err) {
-    console.error("Error in getClass controller : ", err);
+    console.error("Error in getClasses controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
+    return;
   }
 };
 
@@ -465,7 +486,7 @@ export const getMessages = async (
     res.status(200).json(classM);
   } catch (err) {
     res.status(500).json({ error: "Internal sever error!" });
-    console.log("Error in getMessages controller : ", err);
+    console.error("Error in getMessages controller : ", err);
   }
 };
 
@@ -505,7 +526,7 @@ export const getClasswork = async (
     res.status(200).json(classM);
   } catch (err) {
     res.status(500).json({ error: "Internal sever error!" });
-    console.log("Error in getMessages controller : ", err);
+    console.error("Error in getMessages controller : ", err);
   }
 };
 
@@ -535,7 +556,7 @@ export const getMembers = async (
     res.status(200).json(classDetails);
   } catch (err) {
     res.status(500).json({ error: "Internal sever error!" });
-    console.log("Error in getMessages controller : ", err);
+    console.error("Error in getMessages controller : ", err);
   }
 };
 
@@ -772,6 +793,63 @@ export const removeMember = async (
     res.status(200).json({ message: "Removed from class!" });
   } catch (err) {
     console.error("Error in newAdmin controller : ", err);
+    res.status(500).json({ error: "Internal sever error!" });
+  }
+};
+
+export const pinAClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const classId = req.params.classID;
+    const userId = req.user;
+    if (!userId || !isValidObjectId(userId)) {
+      res.status(400).json({ error: "Unauthorized" });
+      return;
+    }
+
+    if (!classId || !isValidObjectId(classId)) {
+      res.status(400).json({ error: "Invlaid classID." });
+      return;
+    }
+
+    const classToPin = await Classes.findById(classId);
+    if (!classToPin) {
+      res.status(404).json({ error: "No such class found." });
+      return;
+    }
+
+    const isMember = classToPin.members.some((m) => m.toString() === userId);
+    const isAdmin = classToPin.admins.some((a) => a.toString() === userId);
+
+    if (!isMember && !isAdmin) {
+      res.status(400).json({ error: "You are not member of this class." });
+      return;
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      res.status(400).json({ error: "Unathorized" });
+      return;
+    }
+
+    const isPinned = user.pinnedClasses.some((id) => id.toString() === classId);
+
+    if (isPinned) {
+      user.pinnedClasses = user.pinnedClasses.filter(
+        (id) => id.toString() !== classId,
+      );
+    } else {
+      user.pinnedClasses.push(new mongoose.Types.ObjectId(classId));
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: `Class ${isPinned ? "unpinned" : "pinned"} successfully.`,
+    });
+    return;
+  } catch (err) {
+    console.error("Error in pinAClass controller : ", err);
     res.status(500).json({ error: "Internal sever error!" });
   }
 };

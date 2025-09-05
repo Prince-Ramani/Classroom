@@ -1,7 +1,11 @@
 <!-- TODO -->
 
+SideBar HOMEPAGE
+Createclass page UI
+Notifications
+
+<!-- completed -->
+
 [x] NO class home page UI
 [x] Signup/Signin page UI
-ClassPin Feature
-SideBar HOMEPAGE
-Notifications
+[x]ClassPin Feature

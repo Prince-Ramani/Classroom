@@ -18,6 +18,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: process.env.defaultProfilePic,
     },
+    pinnedClasses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Classes",
+        default: [],
+        required: false,
+      },
+    ],
     classesJoined: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +35,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = mongoose.model("User", userSchema);

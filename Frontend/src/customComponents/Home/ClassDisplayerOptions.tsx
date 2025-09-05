@@ -11,9 +11,17 @@ import { memo } from "react";
 import { toast } from "react-toastify";
 
 const ClassDisplayerOptions = memo(
-  ({ classID, className }: { classID: string; className?: string }) => {
+  ({
+    classID,
+    className,
+    isPinnedClass,
+  }: {
+    classID: string;
+    className?: string;
+    isPinnedClass: boolean;
+  }) => {
     const queryClient = useQueryClient();
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
       mutationFn: async () => {
         const res = await fetch(`/api/class/leaveclass/${classID}`, {
           method: "POST",
@@ -28,6 +36,24 @@ const ClassDisplayerOptions = memo(
         queryClient.invalidateQueries({ queryKey: ["classes"] });
       },
     });
+
+    const { mutate: PinAClass, isPending: pinningClass } = useMutation({
+      mutationFn: async () => {
+        const res = await fetch(`/api/class/pinAClass/${classID}`, {
+          method: "PATCH",
+        });
+        const data = await res.json();
+
+        return data;
+      },
+      onSuccess(data) {
+        if ("error" in data) return toast.error(data.error);
+        toast.success(data.message);
+        queryClient.invalidateQueries({ queryKey: ["classes"] });
+        queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      },
+    });
+
     return (
       <span>
         <Popover>
@@ -48,8 +74,16 @@ const ClassDisplayerOptions = memo(
             <button
               className=" h-full w-full p-1   border-none outline-none hover:bg-black/10 active:bg-red-600/40 text-center transition-colors cursor-pointer select-none font-semibold tracking-wide border-b border-gray-500"
               onClick={() => mutate()}
+              disabled={pinningClass || isPending}
             >
               Unroll
+            </button>
+            <button
+              className=" h-full w-full p-1   border-t-2 outline-none hover:bg-black/10 active:bg-red-600/40 text-center transition-colors  cursor-pointer select-none font-semibold tracking-wide  "
+              onClick={() => PinAClass()}
+              disabled={pinningClass || isPending}
+            >
+              {isPinnedClass ? "Unpin" : "Pin"}
             </button>
           </PopoverContent>
         </Popover>

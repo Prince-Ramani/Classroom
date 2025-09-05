@@ -6,7 +6,13 @@ import ClassDisplayerOptions from "./ClassDisplayerOptions";
 import { useNavigate } from "react-router-dom";
 
 const ClassDisplayer = memo(
-  ({ classDetails }: { classDetails: ClassInterface }) => {
+  ({
+    classDetails,
+    isPinnedClass,
+  }: {
+    classDetails: ClassInterface;
+    isPinnedClass: boolean;
+  }) => {
     const navigate = useNavigate();
     const handleClick = (e: any) => {
       if (
@@ -21,7 +27,7 @@ const ClassDisplayer = memo(
     };
     return (
       <div
-        className="border-2  rounded-md  h-fit w-full cursor-pointer hover:border-green-600 transition-all duration-200 "
+        className={`  border-2 ${isPinnedClass ? " border-transparent " : ""} rounded-md  h-fit w-full cursor-pointer hover:border-green-600 transition-all duration-200 `}
         role="button"
         tabIndex={0}
         onClick={handleClick}
@@ -39,7 +45,10 @@ const ClassDisplayer = memo(
             <div className=" first-letter:capitalize font-bold tracking-wide">
               {classDetails.name}
             </div>
-            <ClassDisplayerOptions classID={classDetails._id} />
+            <ClassDisplayerOptions
+              classID={classDetails._id}
+              isPinnedClass={isPinnedClass}
+            />
           </div>
           <div className="absolute bottom-2 text-white text-xs left-2">
             {classDetails.teacherName}

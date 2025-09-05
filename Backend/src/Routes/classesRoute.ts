@@ -15,6 +15,7 @@ import {
   joinClass,
   leaveClass,
   newAdmin,
+  pinAClass,
   removeMember,
 } from "../Controllers/classControllers";
 
@@ -36,5 +37,6 @@ router.patch("/makeadmin", protectRoute, newAdmin);
 router.patch("/removemember/:classID/:personID", protectRoute, removeMember);
 router.get("/getmembers/:classID", protectRoute, getMembers);
 router.get("/getComments/:classID/:messageID", protectRoute, getComments);
+router.patch("/pinAClass/:classID", protectRoute, pinAClass);
 
 export default router;
