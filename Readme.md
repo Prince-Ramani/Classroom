@@ -10,3 +10,4 @@ Notifications
 [x] Signup/Signin page UI
 [x] ClassPin Feature
 [x] ClassPin Ui
+[x] Dependencies fix
