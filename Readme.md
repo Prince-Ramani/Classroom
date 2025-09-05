@@ -8,4 +8,5 @@ Notifications
 
 [x] NO class home page UI
 [x] Signup/Signin page UI
-[x]ClassPin Feature
+[x] ClassPin Feature
+[x] ClassPin Ui
