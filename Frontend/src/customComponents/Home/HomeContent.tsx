@@ -12,13 +12,16 @@ const HomeContent = memo(() => {
     queryFn: async () => {
       const res = await fetch("/api/class/getclasses");
       const data = await res.json();
+      console.log(data);
       if ("error" in data) toast.error(data.error);
       return data;
     },
   });
   return (
     <div className=" flex flex-grow p-2 justify-center    w-full h-full ">
-      {!!data && !isLoading ? (
+      {!!data &&
+      !isLoading &&
+      (data.classes.length > 0 || data.pinnedClasses.length > 0) ? (
         <div className="flex flex-col w-full h-full  items-center">
           {/* Pinned classes*/}
           {!!data.pinnedClasses && data.pinnedClasses.length > 0 ? (
@@ -70,7 +73,10 @@ const HomeContent = memo(() => {
         ""
       )}
 
-      {data && data.length === 0 && !isLoading ? (
+      {!!data &&
+      data.pinnedClasses.length === 0 &&
+      data.classes.length === 0 &&
+      !isLoading ? (
         <div className="flex w-full h-full justify-center items-center">
           <NoMessage />
         </div>
