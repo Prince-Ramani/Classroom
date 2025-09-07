@@ -3,6 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { unlink } from "fs";
 import Messages from "../models/MessagesModel";
 import Classes from "../models/ClassModel";
+import Notification from "../models/NotificationsModel";
 
 const FolderName = "GoogleClassroom";
 const ImageFolder = FolderName + "/images";
@@ -10,7 +11,7 @@ const VideoFolder = FolderName + "/videos";
 const DocsFolder = FolderName + "/docs";
 export const sendMessage = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const userID = req.user as string;
@@ -67,7 +68,7 @@ export const sendMessage = async (
     }
 
     const isAdmin = classToSendMessage.admins.some(
-      (admin) => admin.toString() === userID
+      (admin) => admin.toString() === userID,
     );
 
     if (!isAdmin) {
@@ -116,31 +117,14 @@ export const sendMessage = async (
           } catch (err) {
             console.error(
               "Error uploading attachedImages in sendMessage : ",
-              err
+              err,
             );
             res.status(500).json("Internal sever error!");
             return;
           }
-        })
+        }),
       );
-    }
-
-    if (attachedImagesarr.length > 0) {
-      const message = new Messages({
-        content,
-        attachedImages: attachedImagesarr,
-        uploadedBy: userID,
-        classID,
-        type,
-        dueDate: dueDate || "",
-      });
-
-      await message.save();
-      res.status(200).json({ message: "Message sent!" });
-      return;
-    }
-
-    if (attachedVideo) {
+    } else if (attachedVideo) {
       try {
         const uploadResult = await cloudinary.uploader.upload(
           //@ts-ignore
@@ -148,7 +132,7 @@ export const sendMessage = async (
           {
             resource_type: "video",
             folder: VideoFolder,
-          }
+          },
         );
         //@ts-ignore
         unlink(`../uploads/${attachedVideo[0].filename}`, (_) => {
@@ -161,24 +145,7 @@ export const sendMessage = async (
         res.status(500).json("Internal sever error!");
         return;
       }
-    }
-
-    if (attachedVideoUrl) {
-      const message = new Messages({
-        content,
-        attachedVideo: attachedVideoUrl,
-        uploadedBy: userID,
-        classID,
-        dueDate: dueDate || "",
-        type,
-      });
-      await message.save();
-
-      res.status(200).json({ message: "Message sent!" });
-      return;
-    }
-
-    if (attachedPdfs && attachedPdfs.length > 0) {
+    } else if (attachedPdfs && attachedPdfs.length > 0) {
       if (attachedPdfs.length > 4) {
         res
           .status(400)
@@ -202,7 +169,7 @@ export const sendMessage = async (
               fileName: pdf.originalname,
               link: uploadResult.secure_url,
             });
-          })
+          }),
         );
       } catch (err) {
         console.error("Error uploading attahcedPdfs in sendMessage : ", err);
@@ -211,8 +178,28 @@ export const sendMessage = async (
       }
     }
 
-    if (attachedPdfsarr.length > 0) {
-      const message = new Messages({
+    let message;
+
+    if (attachedImagesarr.length > 0) {
+      message = new Messages({
+        content,
+        attachedImages: attachedImagesarr,
+        uploadedBy: userID,
+        classID,
+        type,
+        dueDate: dueDate || "",
+      });
+    } else if (attachedVideoUrl) {
+      message = new Messages({
+        content,
+        attachedVideo: attachedVideoUrl,
+        uploadedBy: userID,
+        classID,
+        dueDate: dueDate || "",
+        type,
+      });
+    } else if (attachedPdfsarr.length > 0) {
+      message = new Messages({
         content,
         attachedPdfs: attachedPdfsarr,
         uploadedBy: userID,
@@ -220,20 +207,25 @@ export const sendMessage = async (
         dueDate: dueDate || "",
         type,
       });
-      await message.save();
-
-      res.status(200).json({ message: "Message sent!" });
-      return;
+    } else {
+      message = new Messages({
+        content,
+        uploadedBy: userID,
+        classID,
+        type,
+        dueDate: dueDate || "",
+      });
     }
-
-    const message = new Messages({
-      content,
-      uploadedBy: userID,
-      classID,
-      type,
-      dueDate: dueDate || "",
-    });
     await message.save();
+
+    let sendTo = [...classToSendMessage.members, ...classToSendMessage.admins];
+
+    const noti = new Notification({
+      class: classToSendMessage._id,
+      message: message._id,
+      sendTo: sendTo,
+    });
+    await noti.save();
 
     res.status(200).json({ message: "Message sent!" });
     return;
@@ -245,7 +237,7 @@ export const sendMessage = async (
 
 export const editMessage = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const {
@@ -293,7 +285,7 @@ export const editMessage = async (
     }
 
     const isAdmin = classOfMessage.admins.some(
-      (admin) => admin.toString() === userID
+      (admin) => admin.toString() === userID,
     );
 
     if (!isAdmin) {
@@ -322,7 +314,7 @@ export const editMessage = async (
 
 export const pinMessage = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const classID: string | undefined = req.params.classID;
@@ -353,7 +345,7 @@ export const pinMessage = async (
     }
 
     const isAdmin = classOfMessage.admins.some(
-      (admin) => admin.toString() === userID
+      (admin) => admin.toString() === userID,
     );
 
     if (!isAdmin) {
@@ -393,7 +385,7 @@ export const pinMessage = async (
 
 export const deleteMessaege = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const classID: string | undefined = req.params.classID;
@@ -424,7 +416,7 @@ export const deleteMessaege = async (
     }
 
     const isAdmin = classOfMessage.admins.some(
-      (admin) => admin.toString() === userID
+      (admin) => admin.toString() === userID,
     );
 
     if (!isAdmin) {
@@ -455,12 +447,12 @@ export const deleteMessaege = async (
           } catch (err) {
             console.error(
               "Error deleting attachedImages in deleteMesssage controller : ",
-              err
+              err,
             );
             res.status(500).json("Internal sever error!");
             return;
           }
-        })
+        }),
       );
     }
 
@@ -478,7 +470,7 @@ export const deleteMessaege = async (
       } catch (err) {
         console.error(
           "Error deleting attachedVideo in deleteMesssage controller : ",
-          err
+          err,
         );
         res.status(500).json("Internal sever error!");
         return;
@@ -498,16 +490,17 @@ export const deleteMessaege = async (
           } catch (err) {
             console.error(
               "Error deleting attachedDocs in deleteMesssage controller : ",
-              err
+              err,
             );
             res.status(500).json("Internal sever error!");
             return;
           }
-        })
+        }),
       );
     }
 
     await Messages.findOneAndDelete({ _id: messageID, classID: classID });
+    await Notification.findOneAndDelete({ message: messageID });
 
     res.status(200).json({
       message: `Message deleted successfully!`,

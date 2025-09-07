@@ -6,7 +6,7 @@ interface AuthUserContextTypes {
   setAuthUser: React.Dispatch<React.SetStateAction<UserInterface | null>>;
 }
 const AuthUserContext = createContext<AuthUserContextTypes | undefined>(
-  undefined
+  undefined,
 );
 
 const AuthUserContextProvider = ({

@@ -28,7 +28,7 @@ export interface shortMessageInetrface {
   isPinned: boolean;
   type: "Normal" | "Assignment" | "Classwork";
   classID: string;
-  dueDate: string;
+  dueDate?: string;
 
   uploadedBy: {
     _id: string;
@@ -86,4 +86,10 @@ export interface FullMessageInterface {
     username: string;
   };
   _id: string;
+}
+
+export interface NotificationInterface {
+  _id: string;
+  message: string;
+  class: string;
 }
