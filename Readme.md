@@ -1,11 +1,13 @@
 <!-- TODO -->
 
-SideBar HOMEPAGE
 Createclass page UI
-Notifications
+Bug fixe while using mouse
+settings page class
 
 <!-- completed -->
 
+[x]SideBar HOMEPAGE
+[x] Notifications
 [x] NO class home page UI
 [x] Signup/Signin page UI
 [x] ClassPin Feature

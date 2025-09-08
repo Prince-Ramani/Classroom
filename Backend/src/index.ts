@@ -9,6 +9,7 @@ import authRouter from "./Routes/authRoutes";
 import classRouter from "./Routes/classesRoute";
 import messageRouter from "./Routes/messagesRoute";
 import commentRouter from "./Routes/commentsRoutes";
+import notificationsRouter from "./Routes/notificationsRouter";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -32,6 +33,7 @@ app.use("/api", authRouter);
 app.use("/api/class", classRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/comment", commentRouter);
+app.use("/api/notifications", notificationsRouter);
 
 app.get("*", (req: Request, res: Response) => {
   console.log(req.url);

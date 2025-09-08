@@ -3,7 +3,7 @@ import HomeContent from "./HomeContent";
 
 const Home = () => {
   return (
-    <div className="border min-h-screen flex  flex-col">
+    <div className="border  min-h-screen flex  flex-col">
       <HomeBar />
       <HomeContent />
     </div>

@@ -90,6 +90,16 @@ export interface FullMessageInterface {
 
 export interface NotificationInterface {
   _id: string;
-  message: string;
-  class: string;
+  readed: boolean;
+  message: {
+    _id: string;
+    uploadedBy: {
+      username: string;
+      profilePicture: string;
+    };
+    createdAt: string;
+    content: string;
+    classID: string;
+    type: "Normal" | "Assignment" | "Classwork";
+  };
 }

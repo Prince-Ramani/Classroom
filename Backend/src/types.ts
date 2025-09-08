@@ -17,3 +17,15 @@ export interface createClassInterface {
   description?: string;
   teacherName: string;
 }
+
+export interface getNotificationMessageInterface {
+  _id: string;
+  uploadedBy: {
+    username: string;
+    profilePicture: string;
+  };
+  createdAt: string;
+  content: string;
+  classID: string;
+  type: "Normal" | "Assignment" | "Classwork";
+}

@@ -1,6 +1,5 @@
 import AddButton from "@/something/AddButton";
 
-import { Menu } from "lucide-react";
 import { memo, useState } from "react";
 import Profile from "./Profile";
 import JoinClassDialog from "./JoinClassDialog";
@@ -8,7 +7,6 @@ import HomeSidebar from "./HomeSidebar";
 
 const HomeBar = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <>
       {isOpen ? <JoinClassDialog isOpen={isOpen} setIsOpen={setIsOpen} /> : ""}

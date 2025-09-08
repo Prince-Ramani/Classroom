@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthUserContextProvider from "./Context/authUserContext.tsx";
+import NotificationsProvider from "./Context/notificationContext.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,13 +17,15 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthUserContextProvider>
-      <ToastContainer
-        position="top-center"
-        theme="dark"
-        hideProgressBar={true}
-        autoClose={1500}
-      />
-      <App />
+      <NotificationsProvider>
+        <ToastContainer
+          position="top-center"
+          theme="dark"
+          hideProgressBar={true}
+          autoClose={1500}
+        />
+        <App />
+      </NotificationsProvider>
     </AuthUserContextProvider>
-  </QueryClientProvider>
+  </QueryClientProvider>,
 );

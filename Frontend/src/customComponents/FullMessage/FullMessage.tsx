@@ -1,5 +1,5 @@
 import { FullMessageInterface } from "@/lib/FrontendTypes";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { memo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,9 +17,8 @@ import MessageOptions from "../Class/messageOptions";
 const FullMessage = memo(() => {
   const { classID, messageID } = useParams();
   const navigate = useNavigate();
-
-  if (!classID) navigate("/");
-  if (!messageID) navigate("/");
+  const queryclient = useQueryClient();
+  if (!classID || !messageID) navigate("/");
   const { data, isPending } = useQuery({
     queryKey: [classID, messageID],
     queryFn: async () => {
@@ -29,6 +28,8 @@ const FullMessage = memo(() => {
         toast.error(data.error);
         return;
       }
+
+      queryclient.invalidateQueries({ queryKey: ["notifications"] });
       return data;
     },
   });

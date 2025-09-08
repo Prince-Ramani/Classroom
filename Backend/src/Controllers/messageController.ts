@@ -500,7 +500,7 @@ export const deleteMessaege = async (
     }
 
     await Messages.findOneAndDelete({ _id: messageID, classID: classID });
-    await Notification.findOneAndDelete({ message: messageID });
+    await Notification.findOneAndDelete({ message: messageID, class: classID });
 
     res.status(200).json({
       message: `Message deleted successfully!`,

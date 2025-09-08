@@ -17,9 +17,14 @@ import People from "./customComponents/Class/People/People";
 import FullMessage from "./customComponents/FullMessage/FullMessage";
 import Settings from "./customComponents/FullMessage/Settings";
 import Loading from "./components/Loading";
+import NotificationPage from "./customComponents/Home/Notification";
+import { toast } from "react-toastify";
+import { useNotification } from "./Context/notificationContext";
+import { NotificationInterface } from "./lib/FrontendTypes";
 
 const App = () => {
   const { setAuthUser } = useAuthUser();
+  const { setNotifications } = useNotification();
 
   const { isPending, data } = useQuery({
     queryKey: ["authUser"],
@@ -35,6 +40,26 @@ const App = () => {
   });
 
   const isLoggedIn = data && !data.error;
+
+  const { data: notificationsData } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async (): Promise<NotificationInterface[] | null> => {
+      const res = await fetch("/api/notifications/getNotifications");
+      const data: NotificationInterface[] | { error: string } =
+        await res.json();
+
+      if ("error" in data) {
+        toast.error(data.error);
+        return null;
+      }
+
+      setNotifications(data);
+      return data;
+    },
+    retry: false,
+    enabled: isLoggedIn,
+    refetchInterval: 1000 * 10,
+  });
 
   if (isPending) {
     return (
@@ -87,6 +112,14 @@ const App = () => {
           path="message/:classID/:messageID"
           element={isLoggedIn ? <FullMessage /> : <Navigate to="/signup" />}
         />
+
+        <Route
+          path="/notifications"
+          element={
+            isLoggedIn ? <NotificationPage /> : <Navigate to="/signup" />
+          }
+        />
+
         <Route
           path="*"
           element={isLoggedIn ? <Navigate to="/" /> : <Navigate to="/signup" />}

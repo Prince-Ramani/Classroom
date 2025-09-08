@@ -9,13 +9,16 @@ import { useAuthUser } from "@/Context/authUserContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import { memo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const DeleteCommentIcon = memo(({ commentID }: { commentID: string }) => {
   const queryclient = useQueryClient();
+  const navigate = useNavigate();
   const { classID, messageID } = useParams();
-  if (!classID || !messageID) return;
+  if (!classID || !messageID) {
+    navigate("/");
+  }
   const [isOpen, setIsOpen] = useState(false);
   const { authUser } = useAuthUser();
   const { mutate, isPending } = useMutation({

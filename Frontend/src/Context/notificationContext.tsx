@@ -2,9 +2,9 @@ import React, { createContext, useContext, useState } from "react";
 import { NotificationInterface } from "@/lib/FrontendTypes";
 
 interface NotificationsContextTypes {
-  notifications: NotificationInterface | null;
+  notifications: NotificationInterface[];
   setNotifications: React.Dispatch<
-    React.SetStateAction<NotificationInterface | null>
+    React.SetStateAction<NotificationInterface[]>
   >;
 }
 const NotificationsContext = createContext<
@@ -12,8 +12,9 @@ const NotificationsContext = createContext<
 >(undefined);
 
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [notifications, setNotifications] =
-    useState<NotificationInterface | null>(null);
+  const [notifications, setNotifications] = useState<NotificationInterface[]>(
+    [],
+  );
   return (
     <NotificationsContext.Provider value={{ notifications, setNotifications }}>
       {children}

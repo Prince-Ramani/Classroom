@@ -21,7 +21,6 @@ const Settings = memo(() => {
 
   if (!classID) {
     navigate("/");
-    return;
   }
 
   const { data, isPending } = useQuery({
@@ -84,7 +83,7 @@ const Settings = memo(() => {
     }
     if (settings.name.length > 30 || settings.name.length < 3) {
       return toast.error(
-        "Class name must be of minimum 3 and maximum 30 characters!"
+        "Class name must be of minimum 3 and maximum 30 characters!",
       );
     }
     if (!settings.teacherName || settings.teacherName.trim() === "") {
@@ -93,7 +92,7 @@ const Settings = memo(() => {
 
     if (settings.teacherName.length > 30 || settings.teacherName.length < 3) {
       return toast.error(
-        "Teacher name must be of minimum 3 and maximum 30 characters!"
+        "Teacher name must be of minimum 3 and maximum 30 characters!",
       );
     }
 
@@ -137,6 +136,27 @@ const Settings = memo(() => {
               </div>
             </div>
           </label>
+
+          <label htmlFor="Teacher">
+            <div className="flex gap-2  flex-col  group  md:items-center  ">
+              <div className="font-semibold text-sm min-w-fit group group-hover:text-blue-500 xl:text-lg ">
+                Teacher name (required) :{" "}
+              </div>
+
+              <div className=" rounded-md w-full group  max-w-xl  ">
+                <input
+                  placeholder="Teacher name"
+                  value={settings.teacherName}
+                  id="Teacher"
+                  onChange={(e) =>
+                    setSettings((p) => ({ ...p, teacherName: e.target.value }))
+                  }
+                  className="text-black bg-transparent group group-hover:border-blue-500 p-1.5 border-black border rounded-md focus:outline-blue-500 w-full max-w-xl "
+                />
+              </div>
+            </div>
+          </label>
+
           <label htmlFor="decription">
             <div className="flex gap-2  flex-col  group  md:items-center  ">
               <div className="font-semibold text-sm min-w-fit group group-hover:text-blue-500 xl:text-lg ">
@@ -159,38 +179,29 @@ const Settings = memo(() => {
             </div>
           </label>
 
-          <label htmlFor="Teacher">
-            <div className="flex gap-2  flex-col  group  md:items-center  ">
-              <div className="font-semibold text-sm min-w-fit group group-hover:text-blue-500 xl:text-lg ">
-                Teacher name (required) :{" "}
-              </div>
-
-              <div className=" rounded-md w-full group  max-w-xl  ">
-                <input
-                  placeholder="Teacher name"
-                  value={settings.teacherName}
-                  id="Teacher"
-                  onChange={(e) =>
-                    setSettings((p) => ({ ...p, teacherName: e.target.value }))
-                  }
-                  className="text-black bg-transparent group group-hover:border-blue-500 p-1.5 border-black border rounded-md focus:outline-blue-500 w-full max-w-xl "
-                />
-              </div>
-            </div>
-          </label>
-
           <div className="flex flex-col gap-2 justify-center items-center">
             <div className="font-bold text-xl tracking-wide">Class code:</div>
             <div className="text-5xl font-bold flex items-center text-blue-600 gap-5 tracking-widest">
               {data?.uniqueAddress}
               <div className="">
-                <CustomTooltip title="Copy code">
+                <CustomTooltip title="Copy">
                   {isCopied ? (
-                    <ClipboardCheck className="size-10  hover:text-gray-600 transition-all cursor-pointer   " />
+                    <ClipboardCheck
+                      tabIndex={0}
+                      role="button"
+                      className="size-10  hover:text-gray-600 transition-all cursor-pointer   "
+                    />
                   ) : (
                     <Clipboard
+                      tabIndex={0}
+                      role="button"
                       className="size-10  hover:text-gray-600 ease-in-out transition-all cursor-pointer  "
                       onClick={handleCopyClick}
+                      onKeyDown={(e) =>
+                        e.key === "" || e.key === "Enter"
+                          ? handleCopyClick()
+                          : ""
+                      }
                     />
                   )}
                 </CustomTooltip>

@@ -6,15 +6,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAuthUser } from "@/Context/authUserContext";
+import { useNotification } from "@/Context/notificationContext";
 import { Label } from "@radix-ui/react-label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Bell, Menu, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const HomeSidebar = () => {
   const { authUser } = useAuthUser();
-
+  const navigate = useNavigate();
+  const { notifications } = useNotification();
   const queryclient = useQueryClient();
+  const [newNotifications, setNewNotifications] = useState(0);
   const { mutate: logout, isPending } = useMutation({
     mutationFn: async () => {
       const res = await fetch("/api/logout", {
@@ -35,14 +40,31 @@ const HomeSidebar = () => {
       await queryclient.invalidateQueries({ queryKey: ["authUser"] });
 
       window.location.reload();
+      navigate("/signin");
     },
   });
+
+  useEffect(() => {
+    let count = 0;
+    notifications.forEach((i) => {
+      !i.readed ? (count = count + 1) : "";
+    });
+    console.log(count);
+    setNewNotifications(count);
+  }, [notifications]);
 
   if (!authUser) return;
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="p-1 bg-white rounded-sm  text-gray-700">
+        <button className="p-1  bg-white rounded-sm  text-gray-700 relative">
+          {newNotifications !== 0 ? (
+            <div className="absolute bg-pink-700 rounded-full size-4 text-xs  flex justify-center items-center text-white -top-2 -right-2">
+              {newNotifications}
+            </div>
+          ) : (
+            ""
+          )}
           <Menu />
         </button>
       </SheetTrigger>
@@ -64,12 +86,22 @@ const HomeSidebar = () => {
             </div>
           </div>
 
-          <div className="w-full   flex  flex-1 flex-col text-gray-900 bg-white border-t 400 ">
-            <button className="flex justify-center gap-4 w-full p-2  md:hover:opacity-80 focus-within:outline-blue-700">
+          <div className="w-full   flex  flex-1 flex-col relative text-gray-900 bg-white border-t 400 ">
+            <button
+              className="flex justify-center gap-4 w-full p-2  md:hover:opacity-80 focus-within:outline-blue-700"
+              onClick={() => navigate("/notifications")}
+            >
               <div className="w-[40%] flex items-center justify-end pr-2">
                 <Bell className="text-gray-900" />
               </div>
               <div className="w-[60%] flex items-center ">Notifications</div>
+              {newNotifications !== 0 ? (
+                <div className="absolute bg-pink-700 rounded-full size-5 md:size-6 text-xs  flex justify-center items-center text-white right-3 ">
+                  {newNotifications}
+                </div>
+              ) : (
+                ""
+              )}
             </button>
 
             <button className="flex justify-center gap-4 w-full p-2  md:hover:opacity-80 focus-within:outline-blue-700">

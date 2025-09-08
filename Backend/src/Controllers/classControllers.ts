@@ -6,6 +6,7 @@ import mongoose, { isValidObjectId, mongo } from "mongoose";
 import Messages from "../models/MessagesModel";
 import { Comments } from "../models/commentModel";
 import { warn } from "console";
+import Notification from "../models/NotificationsModel";
 
 const getBanner = (): String => {
   const rawBanners: String | undefined = process.env.defaultClassBanners;
@@ -200,6 +201,11 @@ export const leaveClass = async (
 
     if (classToLeave.admins.length === 0) {
       await Classes.findByIdAndDelete(classToLeave._id);
+      await Notification.deleteMany({ class: classID });
+      await User.updateMany(
+        { classesJoined: { $in: classID } },
+        { $pull: { classesJoined: classID } },
+      );
       res
         .status(200)
         .json({ message: "Leaved and deleted class successfully!" });
@@ -601,6 +607,15 @@ export const getFullMessage = async (
     //@ts-ignore
     const classname = classMessage.classID.name || "";
 
+    await Notification.findOneAndUpdate(
+      {
+        message: messageID,
+        class: classID,
+        sendTo: { $in: userID },
+      },
+      { $pull: { sendTo: userID }, $push: { readed: userID } },
+    );
+
     res.status(200).json({
       ...classMessage,
       classID: classMessage.classID._id,
@@ -762,15 +777,6 @@ export const removeMember = async (
       return;
     }
 
-    const isMember = classToUpdate.members.some(
-      (member) => member.toString() === userID,
-    );
-
-    if (!isMember) {
-      res.status(400).json({ error: "You aren't in class!" });
-      return;
-    }
-
     const personToBeRemoved = await User.findById(personID);
 
     if (!personToBeRemoved) {
@@ -779,7 +785,7 @@ export const removeMember = async (
     }
 
     classToUpdate.members = classToUpdate.members.filter(
-      (member) => member.toString() !== userID,
+      (member) => member.toString() !== personID,
     );
     personToBeRemoved.classesJoined = personToBeRemoved.classesJoined.filter(
       (c) =>
