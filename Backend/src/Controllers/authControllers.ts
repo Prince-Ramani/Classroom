@@ -19,7 +19,7 @@ const hashPassword = async (password: string): Promise<string> => {
 
 const verifyPassword = async (
   password: string,
-  hashedPassword: string
+  hashedPassword: string,
 ): Promise<boolean> => {
   const verification = await bcrypt.compare(password, hashedPassword);
 
@@ -31,7 +31,7 @@ const ProfilePicturesFolder = FolderName + "/profilePictures";
 
 export const createAccount: RequestHandler = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     let { username, email, password }: createAccountInterface = req.body;
@@ -164,7 +164,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 export const updateProfile = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const userID = req.user;

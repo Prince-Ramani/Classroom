@@ -76,7 +76,7 @@ const ClassDisplayerOptions = memo(
               onClick={() => PinAClass()}
               disabled={pinningClass || isPending}
             >
-              <div
+              <span
                 className={` flex justify-center items-center gap-2 ${isPinnedClass ? "text-red-400" : "text-blue-500"}`}
               >
                 {isPinnedClass ? (
@@ -90,7 +90,7 @@ const ClassDisplayerOptions = memo(
                     Pin
                   </>
                 )}
-              </div>
+              </span>
             </button>
 
             <button
@@ -98,10 +98,10 @@ const ClassDisplayerOptions = memo(
               onClick={() => mutate()}
               disabled={pinningClass || isPending}
             >
-              <div className="flex justify-center items-center gap-2">
+              <span className="flex justify-center items-center gap-2">
                 <DoorOpen className="h-fit w-5 " />
                 Unroll
-              </div>
+              </span>
             </button>
           </PopoverContent>
         </Popover>

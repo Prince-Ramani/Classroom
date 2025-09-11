@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../JWT";
+import { error } from "console";
 
 export const protectRoute = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const token = await req.cookies["user"];
 
     if (!token) {
-      res.status(401).json("Unauthorized!");
+      res.status(401).json({ error: "Unauthorized!" });
       return;
     }
 
@@ -18,7 +19,7 @@ export const protectRoute = async (
 
     if (!userID || typeof userID !== "string") {
       res.status(401).json({
-        error: "Unauthorized",
+        error: "Unauthorized!",
       });
       return;
     }

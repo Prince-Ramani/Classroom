@@ -7,6 +7,7 @@ import { useAuthUser } from "@/Context/authUserContext";
 import { ClassInterface, shortMessageInetrface } from "@/lib/FrontendTypes";
 import MessageDisplayer from "./MessageDisplayer";
 import CreateMessage from "./createMessage";
+import NoClassMessage from "./NoClassMessage";
 
 const Stream = memo(() => {
   const { authUser } = useAuthUser();
@@ -54,19 +55,21 @@ const Stream = memo(() => {
         </div>
 
         <div className="flex flex-col gap-2  h-full w-full   ">
-          {messages && messages.length > 0
-            ? messages.map((message: shortMessageInetrface) => (
-                <MessageDisplayer
-                  key={message._id}
-                  message={message}
-                  isAdmin={
-                    typeof context.admins === "object" &&
-                    !!authUser &&
-                    context.admins.includes(authUser?._id)
-                  }
-                />
-              ))
-            : ""}
+          {messages && messages.length > 0 ? (
+            messages.map((message: shortMessageInetrface) => (
+              <MessageDisplayer
+                key={message._id}
+                message={message}
+                isAdmin={
+                  typeof context.admins === "object" &&
+                  !!authUser &&
+                  context.admins.includes(authUser?._id)
+                }
+              />
+            ))
+          ) : (
+            <NoClassMessage />
+          )}
         </div>
       </div>
     </Wrapper>

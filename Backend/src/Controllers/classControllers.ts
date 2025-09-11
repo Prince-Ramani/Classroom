@@ -9,10 +9,11 @@ import { warn } from "console";
 import Notification from "../models/NotificationsModel";
 
 const getBanner = (): String => {
-  const rawBanners: String | undefined = process.env.defaultClassBanners;
+  const rawBanners: String | undefined = process.env.defaultBanners;
   const banners = rawBanners ? rawBanners.split(",") : [];
-  if (!banners || banners.length === 0)
+  if (!banners || banners.length === 0) {
     return "https://res.cloudinary.com/dwxzguawt/image/upload/v1736764613/wp9612521_wftxbv.webp";
+  }
 
   return banners[Math.floor(Math.random() * banners.length)];
 };
@@ -204,7 +205,9 @@ export const leaveClass = async (
       await Notification.deleteMany({ class: classID });
       await User.updateMany(
         { classesJoined: { $in: classID } },
-        { $pull: { classesJoined: classID } },
+        {
+          $pull: { classesJoined: classID, pinnedClasses: classID },
+        },
       );
       res
         .status(200)

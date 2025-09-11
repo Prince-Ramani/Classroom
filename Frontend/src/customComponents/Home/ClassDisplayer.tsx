@@ -1,5 +1,4 @@
 import { ClassInterface } from "@/lib/FrontendTypes";
-
 import { TrendingUp } from "lucide-react";
 import { memo } from "react";
 import ClassDisplayerOptions from "./ClassDisplayerOptions";
@@ -50,7 +49,7 @@ const ClassDisplayer = memo(
               isPinnedClass={isPinnedClass}
             />
           </div>
-          <div className="absolute bottom-2 text-white text-xs left-2">
+          <div className="absolute bottom-2 text-white text-xs lg:text-sm left-2">
             {classDetails.teacherName}
           </div>
         </div>

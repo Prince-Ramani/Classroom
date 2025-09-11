@@ -11,7 +11,7 @@ const Comment = memo(
       queryKey: [classID, messageID, "comments"],
       queryFn: async () => {
         const res = await fetch(
-          `/api/class/getComments/${classID}/${messageID}`
+          `/api/class/getComments/${classID}/${messageID}`,
         );
         const data:
           | commentInterface[]
@@ -44,7 +44,7 @@ const Comment = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 export default Comment;

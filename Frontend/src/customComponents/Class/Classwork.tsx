@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import MessageDisplayer from "./MessageDisplayer";
 import { ClassInterface, shortMessageInetrface } from "@/lib/FrontendTypes";
 import { useAuthUser } from "@/Context/authUserContext";
+import NoClassMessage from "./NoClassMessage";
 
 const Classwork = memo(() => {
   const context: ClassInterface = useOutletContext();
@@ -32,19 +33,23 @@ const Classwork = memo(() => {
   return (
     <Wrapper>
       <div className="flex flex-col gap-2  h-full w-full   ">
-        {messages && messages.length > 0
-          ? messages.map((message: shortMessageInetrface) => (
-              <MessageDisplayer
-                key={message._id}
-                message={message}
-                isAdmin={
-                  typeof context.admins === "object" &&
-                  !!authUser &&
-                  context.admins.includes(authUser?._id)
-                }
-              />
-            ))
-          : ""}
+        {messages && messages.length > 0 ? (
+          messages.map((message: shortMessageInetrface) => (
+            <MessageDisplayer
+              key={message._id}
+              message={message}
+              isAdmin={
+                typeof context.admins === "object" &&
+                !!authUser &&
+                context.admins.includes(authUser?._id)
+              }
+            />
+          ))
+        ) : (
+          <div className="flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+            <NoClassMessage />
+          </div>
+        )}
       </div>{" "}
     </Wrapper>
   );

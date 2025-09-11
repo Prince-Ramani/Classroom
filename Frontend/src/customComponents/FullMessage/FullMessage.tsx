@@ -24,6 +24,7 @@ const FullMessage = memo(() => {
     queryFn: async () => {
       const res = await fetch(`/api/class/getMessage/${classID}/${messageID}`);
       const data: FullMessageInterface | { error: string } = await res.json();
+      console.log(data);
       if (!data || typeof data === "undefined" || "error" in data) {
         toast.error(data.error);
         return;
@@ -161,7 +162,7 @@ const FullMessage = memo(() => {
                 {data.attachedImages.length > 0 ||
                 data.attachedVideo ||
                 data.attachedPdfs.length > 0 ? (
-                  <div className="text-lg md:text-2xl py-4 font-semibold text-gray-700">
+                  <div className="text-lg object-cover md:text-2xl py-4 font-semibold text-gray-700">
                     Attachments
                   </div>
                 ) : (
@@ -187,7 +188,7 @@ const FullMessage = memo(() => {
 
                 {data.attachedVideo ? (
                   <div
-                    className={`flex items-center justify-center max-h-[600px] max-w-[1111px]   `}
+                    className={`flex items-center justify-center max-h-[600px] max-w-[1111px] object-contain  `}
                   >
                     <VideoPlayer source={data.attachedVideo} />
                   </div>

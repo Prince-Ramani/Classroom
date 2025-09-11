@@ -43,9 +43,9 @@ const JoinClassDialog = ({
   return (
     <div className="">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="  flex items-center border-none justify-center pb-10 min-w-full h-full    z-50 flex-col bg-blue-200/10 bg-opacity-50 ">
+        <DialogContent className="  flex items-center border-none justify-center pb-10 min-w-full h-full    z-50 flex-col bg-blue-800/20 bg-opacity-50 ">
           <DialogTitle />
-          <div className="bg-black p-3 rounded-3xl max-w-[275px] sm:max-w-[300px]  md:max-w-xs w-full">
+          <div className="bg-black p-3 rounded-3xl max-w-[275px] sm:max-w-[300px]  md:max-w-xs w-full ">
             {isPending ? (
               <div className=" absolute inset-0 z-[51] flex justify-center items-center rounded-2xl bg-blue-50/20 cursor-not-allowed">
                 <Loading />

@@ -124,7 +124,7 @@ const Signin = () => {
                 disabled={isPending}
                 onClick={handleClick}
               >
-                Sign up
+                Sign in
               </Button>
               <button
                 className="cursor-pointer group hover:text-blue-400 w-fit text-sm sm:text-base mt-3 "

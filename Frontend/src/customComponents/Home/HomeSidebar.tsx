@@ -104,13 +104,6 @@ const HomeSidebar = () => {
               )}
             </button>
 
-            <button className="flex justify-center gap-4 w-full p-2  md:hover:opacity-80 focus-within:outline-blue-700">
-              <div className="w-[40%] flex items-center justify-end pr-2">
-                <Settings className="text-gray-900" />
-              </div>
-              <div className="w-[60%] flex items-center ">Settings</div>
-            </button>
-
             <div className="w-full p-4 ">
               <button
                 className="bg-red-500 w-full rounded-sm p-1.5 text-white md:hover:bg-red-300 text-center font-semibold disabled:bg-gray-700"

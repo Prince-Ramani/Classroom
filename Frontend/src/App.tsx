@@ -41,7 +41,7 @@ const App = () => {
 
   const isLoggedIn = data && !data.error;
 
-  const { data: notificationsData } = useQuery({
+  useQuery({
     queryKey: ["notifications"],
     queryFn: async (): Promise<NotificationInterface[] | null> => {
       const res = await fetch("/api/notifications/getNotifications");
@@ -57,7 +57,7 @@ const App = () => {
       return data;
     },
     retry: false,
-    enabled: isLoggedIn,
+    enabled: !!isLoggedIn,
     refetchInterval: 1000 * 10,
   });
 

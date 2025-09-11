@@ -18,14 +18,17 @@ const ClassLayout = memo(() => {
     queryFn: async () => {
       const res = await fetch(`/api/class/getclass/${classID}`);
       const data = await res.json();
-      if ("error" in data) return toast.error(data.error);
-
+      if ("error" in data) {
+        if (data.error === "Unauthorized!") navigate("/home");
+        return toast.error(data.error);
+      }
       return data;
     },
     enabled: !!classID,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
+
   return (
     <div className="min-h-screen w-full flex flex-col  ">
       <ClassHeader
