@@ -22,11 +22,12 @@ const PeopleDisplayer = memo(
     isAdmin?: boolean;
     isHimself: boolean;
   }) => {
+    console.log(member._id, isHimself);
     return (
       <div
         className={cn(
           "flex gap-3 md:gap-4 lg:gap-5 items-center p-1 lg:p-2 lg:pb-4",
-          className
+          className,
         )}
       >
         <img
@@ -49,7 +50,7 @@ const PeopleDisplayer = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 export default PeopleDisplayer;

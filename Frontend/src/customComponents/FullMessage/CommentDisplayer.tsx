@@ -104,7 +104,7 @@ const CommentDisplayer = memo(
                       <div className="text-gray-500 tracking-tight text-xs md:text-sm ">
                         {FormateDate(reply.RepliedAt)}
                       </div>
-                      {reply.replierId._id === authUser && reply._id ? (
+                      {reply.replierId._id === authUser ? (
                         <DeleteReply
                           commentID={comment._id}
                           replyID={reply._id}

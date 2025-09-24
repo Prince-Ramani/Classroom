@@ -22,7 +22,9 @@ const Stream = memo(() => {
     queryFn: async () => {
       const res = await fetch(`/api/class/getmessages/${classID}`);
       const data = await res.json();
-      if ("error" in data) toast.error(data.error);
+      if ("error" in data) {
+        toast.error(data.error);
+      }
       return data;
     },
     enabled: !!classID,

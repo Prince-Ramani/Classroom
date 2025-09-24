@@ -25,7 +25,7 @@ const People = memo(() => {
       if ("error" in data) toast.error(data.error);
 
       setHimselfAdmin(() =>
-        data.admins.some((a: any) => a._id === authUser._id)
+        data.admins.some((a: any) => a._id === authUser._id),
       );
 
       return data;
@@ -48,7 +48,7 @@ const People = memo(() => {
                     _id: string;
                     profilePicture: string;
                   },
-                  index: number
+                  index: number,
                 ) => {
                   return (
                     <PeopleDisplayer
@@ -56,14 +56,14 @@ const People = memo(() => {
                       isHimselfAdmin={isHimselfAdmin}
                       key={member._id}
                       member={member}
-                      isHimself={isHimselfAdmin}
+                      isHimself={member._id === authUser._id}
                       isAdmin={true}
                       className={`${
                         peoples.admins.length - 1 === index ? "" : "border-b-2"
                       }`}
                     />
                   );
-                }
+                },
               )}
             </div>
           </div>
@@ -71,7 +71,7 @@ const People = memo(() => {
           ""
         )}
 
-        {!!peoples ? (
+        {peoples ? (
           <div className="w-full h-full">
             <div className="flex justify-between items-center font-semibold text-2xl md:text-3xl text-blue-600 border-b-2 border-blue-600 w-full  p-2 sm:p-3 md:p-4  ">
               Classmates
@@ -87,7 +87,7 @@ const People = memo(() => {
                     _id: string;
                     profilePicture: string;
                   },
-                  index: number
+                  index: number,
                 ) => {
                   return (
                     <PeopleDisplayer
@@ -101,7 +101,7 @@ const People = memo(() => {
                       }`}
                     />
                   );
-                }
+                },
               )}
             </div>
           </div>

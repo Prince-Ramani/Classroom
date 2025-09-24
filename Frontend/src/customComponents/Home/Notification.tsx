@@ -46,7 +46,7 @@ const NotificationPage = () => {
           </button>
           <div className="font-semibold">Notifications</div>
         </div>
-        {!!notifications && notifications.length === 0 ? (
+        {!!notifications && notifications.length !== 0 ? (
           <div className="flex flex-col ">
             <button
               className="bg-blue-400  cursor-pointer w-full p-1 px-4 md:hover:bg-blue-400/70 active:bg-green-400/70 disabled:bg-gray-700/70 text-white"

@@ -728,7 +728,7 @@ export const newAdmin = async (req: Request, res: Response): Promise<void> => {
 
     await classToUpdate.save();
     res.status(200).json({
-      message: `${!isAdmin ? "New admin created" : "Removed from admin!"}`,
+      message: `${!personIsAdmin ? "New admin created." : "Removed from admin!"}`,
     });
   } catch (err) {
     console.error("Error in newAdmin controller : ", err);
@@ -790,6 +790,11 @@ export const removeMember = async (
     classToUpdate.members = classToUpdate.members.filter(
       (member) => member.toString() !== personID,
     );
+
+    classToUpdate.admins = classToUpdate.admins.filter(
+      (a) => a.toString() !== personID,
+    );
+
     personToBeRemoved.classesJoined = personToBeRemoved.classesJoined.filter(
       (c) =>
         c.toString() !==

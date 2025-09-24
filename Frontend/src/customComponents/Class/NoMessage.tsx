@@ -24,14 +24,14 @@ const NoMessage = () => {
           </div>
           <div className="w-full flex justify-center gap-12 items-center max-w-xl ">
             <button
-              className="bg-green-500 p-2  md:px-4 text-white  rounded-md md:hover:bg-green-100 active:bg-green-700"
+              className="bg-green-500 p-2  md:px-4 text-white  rounded-md md:hover:bg-green-400 active:bg-green-700"
               onClick={() => setIsOpen(true)}
             >
               Join a class
             </button>
 
             <button
-              className="bg-blue-500 p-2 md:px-3 text-white rounded-md md:hover:bg-blue-100 active:bg-blue-700"
+              className="bg-blue-500 p-2 md:px-3 text-white rounded-md md:hover:bg-blue-400 active:bg-blue-700"
               onClick={() => navigate("/createclass")}
             >
               Create a class

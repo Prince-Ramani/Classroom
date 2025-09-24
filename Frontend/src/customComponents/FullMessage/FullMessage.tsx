@@ -27,6 +27,7 @@ const FullMessage = memo(() => {
       console.log(data);
       if (!data || typeof data === "undefined" || "error" in data) {
         toast.error(data.error);
+        navigate("/");
         return;
       }
 

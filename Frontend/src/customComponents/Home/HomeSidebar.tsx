@@ -9,7 +9,7 @@ import { useAuthUser } from "@/Context/authUserContext";
 import { useNotification } from "@/Context/notificationContext";
 import { Label } from "@radix-ui/react-label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Bell, Menu, Settings } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -46,10 +46,7 @@ const HomeSidebar = () => {
 
   useEffect(() => {
     let count = 0;
-    notifications.forEach((i) => {
-      !i.readed ? (count = count + 1) : "";
-    });
-    console.log(count);
+    notifications.forEach((i) => (!i.readed ? (count = count + 1) : ""));
     setNewNotifications(count);
   }, [notifications]);
 
@@ -88,7 +85,7 @@ const HomeSidebar = () => {
 
           <div className="w-full   flex  flex-1 flex-col relative text-gray-900 bg-white border-t 400 ">
             <button
-              className="flex justify-center gap-4 w-full p-2  md:hover:opacity-80 focus-within:outline-blue-700"
+              className="flex justify-center gap-4 w-full p-2  md:hover:bg-slate-300/60 focus-within:outline-blue-700"
               onClick={() => navigate("/notifications")}
             >
               <div className="w-[40%] flex items-center justify-end pr-2">

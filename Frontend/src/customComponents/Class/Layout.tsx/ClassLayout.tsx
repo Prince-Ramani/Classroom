@@ -19,7 +19,11 @@ const ClassLayout = memo(() => {
       const res = await fetch(`/api/class/getclass/${classID}`);
       const data = await res.json();
       if ("error" in data) {
-        if (data.error === "Unauthorized!") navigate("/home");
+        if (
+          data.error === "Unauthorized!" ||
+          data.error === "No such class found!"
+        )
+          navigate("/home");
         return toast.error(data.error);
       }
       return data;
