@@ -147,7 +147,7 @@ const CreateMessage = memo(
       }
       if (dueDate && type === "Assignment")
         formData.append("dueDate", dueDate.toString());
-      formData.append("content", content);
+      formData.append("content", content.replace(/\n/g, "\r\n"));
       formData.append("type", type);
 
       mutate(formData);

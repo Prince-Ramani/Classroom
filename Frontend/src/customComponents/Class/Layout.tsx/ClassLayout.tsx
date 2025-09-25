@@ -32,17 +32,22 @@ const ClassLayout = memo(() => {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
-
   return (
     <div className="min-h-screen w-full flex flex-col  ">
-      <ClassHeader
-        classname={data?.name}
-        classID={data?._id}
-        isAdmin={data?.admins.includes(authUser?._id)}
-      />
-      <main className="min-h-full w-full pb-16 md:pb-2 flex-col flex flex-grow sm:p-1 sm:px-2 md:p-2 ">
-        {data ? <Outlet context={data} /> : ""}
-      </main>
+      {!!data && !!authUser && data._id ? (
+        <>
+          <ClassHeader
+            classname={data?.name}
+            classID={data._id}
+            isAdmin={data.admins.includes(authUser?._id)}
+          />
+          <main className="min-h-full w-full pb-16 md:pb-2 flex-col flex flex-grow sm:p-1 sm:px-2 md:p-2 ">
+            {data ? <Outlet context={data} /> : ""}
+          </main>
+        </>
+      ) : (
+        ""
+      )}
     </div>
   );
 });

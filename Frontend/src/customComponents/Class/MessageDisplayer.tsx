@@ -145,7 +145,7 @@ const MessageDisplayer = memo(
           ""
         )}
 
-        <div className=" p-2 break-words text-sm sm:text-base  ">
+        <div style={{ whiteSpace: "pre-line" }} className="break-all">
           {message.content}
         </div>
         {message.attachedVideo ? (

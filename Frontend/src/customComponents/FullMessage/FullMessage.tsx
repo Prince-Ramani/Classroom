@@ -158,7 +158,9 @@ const FullMessage = memo(() => {
               )}
 
               <div className=" pb-4">
-                <div className="md:text-lg break-all">{data.content}</div>
+                <div style={{ whiteSpace: "pre-line" }} className="break-all">
+                  {data.content}
+                </div>
 
                 {data.attachedImages.length > 0 ||
                 data.attachedVideo ||
