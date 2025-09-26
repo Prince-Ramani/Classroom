@@ -16,7 +16,7 @@ const Signin = () => {
   const queryclient = useQueryClient();
 
   const {
-    mutate: signUp,
+    mutate: signin,
     isPending,
     data,
   } = useMutation({
@@ -57,7 +57,7 @@ const Signin = () => {
       return toast.error("Invalid email format!");
     }
 
-    signUp();
+    signin();
   };
 
   return (

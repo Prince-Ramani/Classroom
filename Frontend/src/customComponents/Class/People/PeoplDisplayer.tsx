@@ -22,7 +22,6 @@ const PeopleDisplayer = memo(
     isAdmin?: boolean;
     isHimself: boolean;
   }) => {
-    console.log(member._id, isHimself);
     return (
       <div
         className={cn(
